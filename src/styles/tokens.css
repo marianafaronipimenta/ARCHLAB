@@ -1,0 +1,55 @@
+/* ═════════════ ARCHLAB — token di design ═════════════
+ * Laboratorio hardware: fondo blu notte e grafite, accenti ciano ed elettrico.
+ * Contrasti pensati per la lettura prolungata: il testo principale non è ciano puro.
+ */
+:root {
+  color-scheme: dark;
+
+  --bg-0: #050a16;
+  --bg-1: #081123;
+  --bg-2: #0c1830;
+  --surface: rgba(11, 22, 44, 0.86);
+  --surface-strong: #0e1c37;
+  --graphite: #141c2b;
+
+  --line: rgba(86, 170, 255, 0.22);
+  --line-strong: rgba(56, 216, 255, 0.55);
+
+  --cyan: #38d8ff;
+  --cyan-soft: #7fe3ff;
+  --electric: #2f7bff;
+  --green: #3ee0a5;
+  --amber: #ffc861;
+
+  --text: #e4ecf8;
+  --text-muted: #9cadc9;
+  --text-dim: #74859f;
+
+  --glow: 0 0 18px rgba(56, 216, 255, 0.28);
+  --glow-strong: 0 0 26px rgba(56, 216, 255, 0.45);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  --font-ui: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', sans-serif;
+  --font-display: 'Rajdhani', 'Bahnschrift', 'DIN Alternate', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'JetBrains Mono', 'Cascadia Code', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* colori delle illustrazioni dei moduli */
+  --art-line: #2f6aa8;
+  --art-glow: #38d8ff;
+  --art-soft: #5d86b8;
+  --art-fill: rgba(20, 50, 95, 0.45);
+  --art-text: #9fc1e6;
+
+  --sidebar-w: 236px;
+  --topbar-h: 76px;
+}
+
+/* Modalità studio: meno bagliori e niente animazioni. */
+:root[data-calm='true'] {
+  --glow: none;
+  --glow-strong: none;
+  --line-strong: rgba(56, 216, 255, 0.35);
+}

@@ -1,0 +1,224 @@
+/* ───────── Barra superiore ───────── */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--topbar-h);
+  padding: 0.6rem clamp(1rem, 3vw, 2rem);
+  background: rgba(5, 10, 22, 0.88);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: inherit;
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  color: var(--cyan);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 40%, rgba(56, 216, 255, 0.18), rgba(10, 20, 40, 0.9));
+  box-shadow: var(--glow);
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+.brand-name span {
+  color: var(--cyan);
+}
+.brand-sub {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(10, 20, 40, 0.7);
+}
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--cyan-soft);
+  border: 1px solid var(--line-strong);
+  background: rgba(47, 123, 255, 0.12);
+}
+.profile-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 130px;
+  gap: 0.15rem;
+}
+.profile-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.profile-level {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.profile-xp {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ───────── Colonne ───────── */
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--topbar-h);
+  align-self: start;
+  height: calc(100vh - var(--topbar-h));
+  padding: 1.5rem 0;
+  border-right: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(8, 17, 35, 0.75), rgba(5, 10, 22, 0.4));
+}
+.sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 1.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 1rem;
+  background: none;
+  border: 0;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.sidebar-link:hover {
+  color: var(--text);
+  background: rgba(47, 123, 255, 0.08);
+}
+.sidebar-link.is-active {
+  color: var(--text);
+  font-weight: 600;
+  border-left-color: var(--cyan);
+  background: linear-gradient(90deg, rgba(47, 123, 255, 0.28), rgba(47, 123, 255, 0));
+}
+.sidebar-link.is-active svg {
+  color: var(--cyan);
+}
+.sidebar-link:focus-visible {
+  outline-offset: -3px;
+}
+
+.main {
+  min-width: 0;
+  padding: clamp(1rem, 2.5vw, 2rem) clamp(1rem, 3vw, 2.5rem) 3rem;
+}
+.main:focus {
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: static;
+    height: auto;
+    padding: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
+  .sidebar-list {
+    display: flex;
+    gap: 0;
+    padding: 0 0.5rem;
+  }
+  .sidebar-link {
+    min-height: 46px;
+    padding: 0.5rem 0.9rem;
+    border-left: 0;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    font-size: 0.92rem;
+  }
+  .sidebar-link.is-active {
+    border-bottom-color: var(--cyan);
+    background: rgba(47, 123, 255, 0.15);
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --topbar-h: 64px;
+  }
+  .topbar {
+    position: static;
+  }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+  }
+  .brand-name {
+    font-size: 1.35rem;
+  }
+  .brand-sub {
+    font-size: 0.66rem;
+  }
+  .profile {
+    padding: 0.3rem;
+    gap: 0.5rem;
+  }
+  .profile-body {
+    min-width: 0;
+  }
+  .profile-body .progress,
+  .profile-xp {
+    display: none;
+  }
+  .sidebar-link span {
+    font-size: 0.88rem;
+  }
+}
