@@ -13,12 +13,12 @@ Cartella Google Drive «architettura 2» (corso Architettura degli Elaboratori, 
 | 01 Approccio strutturale | 1. Approccio strutturale |
 | 02 Assembly, Object and Executable Files | 2. Assembly, object, and executable files |
 | 03 ISA | 3. ISA |
-| 04 RISC-V (RV32I) | 4. RISC-V (RV32I) · 5. Primi passi in RISC-V · 6. Gestire il flusso d’esecuzione · 9. RISC-V (RV32IM) |
+| 04 RISC-V (RV32I) | 4. RISC-V (RV32I) · 5. Primi passi in RISC-V · 6. Gestire il flusso d’esecuzione · 7. Funzioni e procedure · 9. RISC-V (RV32IM) |
 | 05 Location Counter | 8. Location Counter |
 | 06 Il processore | 10. Il processore |
 | 07 Pipeline | 11. La pipeline · 12. Hazard sui dati · 13. Hazard sul controllo |
 
-Nella cartella **manca la lezione 7**. C’è anche «Materiale utilizzabile all’esame.pdf», da usare più avanti per i riferimenti rapidi. Per la home sono stati usati solo titoli e obiettivi delle lezioni.
+C’è anche «Materiale utilizzabile all’esame.pdf», da usare più avanti per i riferimenti rapidi. I contenuti del modulo 01 seguono la lezione 1 (riferimenti «slide n» = posizione nella presentazione).
 
 ## Struttura
 
@@ -41,21 +41,43 @@ src/
   styles/               tokens.css (colori, font, modalità studio), base, layout, home
 ```
 
-### Prossimi passi previsti
+### Moduli (il modulo 01 fa da modello)
 
 ```
 src/
-  content/<modulo>/     Lezioni (Learn), esercizi (Practice), quiz, challenge di ogni modulo
-  screens/ModuleScreen.tsx   Schede Learn · Practice · Quiz · Challenge · Progress
-  components/exercise/  Domanda a scelta multipla, risposta numerica/esadecimale, codice assembly, feedback con spiegazione dell’errore
-  sim/                  Logica pura e testata dei simulatori (registri RV32I, esecuzione, data path, pipeline per cicli)
+  content/
+    types.ts                  Schema: pagine Learn (blocchi, diagrammi, punti chiave, verifica), esercizi, quiz, challenge
+    m01-approccio-strutturale.ts
+    index.ts                  Registro dei contenuti + validateContent()
+  router.ts                   Routing via hash: #/, #/<sezione>, #/modulo/<id>/<scheda>[/<pagina>]
+  state/store.tsx             ProgressProvider: completeSection, recordResults, rememberLearnPage
+  components/
+    exercise/                 ChoiceQuestionView (practice/quiz/challenge), OrderExerciseView, MatchExerciseView
+    diagrams/                 Diagrammi interattivi della sezione Learn
+    module/                   LearnView, PracticeView, AssessmentView (quiz e challenge), ProgressView
+  screens/ModuleScreen.tsx    Intestazione del modulo e schede Learn · Practice · Quiz · Challenge · Progress
 ```
 
-Una sezione diventa disponibile aggiungendone l’ID ad `availableSections` del modulo: la card, il prossimo passo e i progressi si aggiornano da soli.
+| Sezione | Funzionamento | Completamento | XP |
+| --- | --- | --- | --- |
+| Learn | Pagine con testi, codice, riquadri, diagrammi interattivi, punti da ricordare e verifica rapida; riprende dall’ultima pagina aperta | «Completa Learn» sull’ultima pagina | 50 |
+| Practice | Un esercizio alla volta (scelta multipla, ordinamento, abbinamento), tentativi illimitati, feedback per ogni opzione, link alla pagina da ripassare | Tutti gli esercizi risolti | 75 |
+| Quiz | Una risposta per domanda, feedback e spiegazione immediati, resoconto finale | Almeno 60% (il 100% sblocca «Zero errori») | 100 |
+| Challenge | Domande nuove, nessun suggerimento, esito solo alla fine con resoconto | Almeno 60% | 150 |
+| Progress | Stato delle sezioni, miglior punteggio, tentativi, errori da ripassare con spiegazione e link | — | — |
+
+Gli errori al primo tentativo entrano in «Da ripassare» e ne escono quando la stessa domanda viene risolta correttamente.
+
+**Aggiungere un modulo**: creare `src/content/mNN-….ts` con lo schema di `types.ts`, registrarlo in `content/index.ts` e aggiungere le sezioni pronte ad `availableSections` in `data/modules.ts`. `npm test` verifica ID, riferimenti, opzioni, feedback e che le domande della Challenge siano nuove.
+
+### Prossimi passi
+
+- Moduli 02–07 con lo stesso schema.
+- `src/sim/`: logica pura e testata dei simulatori (registri RV32I, esecuzione, data path, pipeline per cicli).
 
 ## Regole rispettate
 
-- **Niente funzionalità finte**: progressi, XP, livello e conquiste partono da zero e si calcolano solo da completamenti reali; i pulsanti dei moduli e del prossimo passo sono disabilitati con la dicitura «In costruzione»; i simulatori sono marcati «In sviluppo». Funzionano davvero la navigazione tra le sezioni della home e le impostazioni (modalità studio, salvata nel browser).
+- **Niente funzionalità finte**: progressi, XP, livello e conquiste si calcolano solo da attività reali; i moduli non ancora sviluppati restano «In costruzione» e i simulatori «In sviluppo».
 - **Studio prolungato**: testo principale non ciano, contrasti alti, nessuna animazione invadente; la modalità studio e `prefers-reduced-motion` spengono bagliori e animazioni.
 - **Accessibilità**: link «Vai al contenuto», focus visibile, barre di avanzamento con `role="progressbar"`, dialog nativo con Esc, illustrazioni decorative nascoste ai lettori di schermo.
 - **Responsività**: verificata a 1920, 1280 e 375 px senza scorrimento orizzontale; sotto i 900 px la sidebar diventa una barra orizzontale.

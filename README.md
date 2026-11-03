@@ -2,7 +2,7 @@
 
 Piattaforma interattiva di studio per Architettura degli Elaboratori II: sette moduli (dall’approccio strutturale alla pipeline RISC-V), con Learn, Practice, Quiz, Challenge e Progress, gamificazione e simulatori.
 
-**Stato attuale:** è pronta la **schermata iniziale**, per validare identità visiva, composizione e organizzazione. I moduli e i simulatori sono ancora da sviluppare e la home lo indica chiaramente.
+**Stato attuale:** schermata iniziale e **modulo 01 «Approccio strutturale»** completo (Learn, Practice, Quiz, Challenge, Progress). I moduli 02–07 e i simulatori sono in costruzione e l’interfaccia lo indica.
 
 Tutto funziona nel browser: nessun backend, progressi e preferenze in `localStorage`.
 
