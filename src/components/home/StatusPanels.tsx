@@ -1,6 +1,7 @@
 import { ACHIEVEMENTS, type AchievementId } from '../../data/catalog';
 import { SECTION_LABELS, type CourseModule, type SectionId } from '../../data/modules';
 import { ArrowRightIcon, BoltIcon, CheckIcon, LockIcon, TargetIcon, TrophyIcon } from '../art/Icons';
+import { moduleHref } from '../../router';
 import { Panel } from '../ui/Panel';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -104,9 +105,15 @@ export function NextChallenge({ step }: { step: { module: CourseModule; section:
           </span>
           <span className="next-section">{SECTION_LABELS[step.section]}</span>
         </p>
-        <button type="button" className="btn btn-icon" disabled={!ready} aria-label={`Vai a ${SECTION_LABELS[step.section]}`}>
-          <ArrowRightIcon size={20} />
-        </button>
+        {ready ? (
+          <a className="btn btn-icon btn-primary" href={moduleHref(step.module.id, step.section)} aria-label={`Vai a ${SECTION_LABELS[step.section]} del modulo ${step.module.number}`}>
+            <ArrowRightIcon size={20} />
+          </a>
+        ) : (
+          <button type="button" className="btn btn-icon" disabled aria-label={`${SECTION_LABELS[step.section]} non ancora disponibile`}>
+            <ArrowRightIcon size={20} />
+          </button>
+        )}
       </div>
       {!ready && <p className="hint-text">Disponibile quando il modulo sarà sviluppato.</p>}
     </Panel>

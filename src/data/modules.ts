@@ -55,7 +55,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Macchina virtuale e astrazione', 'Semantic gap', 'Traduzione vs interpretazione', 'Livelli L0–L5'],
     icon: 'layers',
     sources: [{ lesson: 1, title: 'Approccio strutturale dei moderni sistemi di elaborazione' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'assembly-object-executable',
@@ -82,12 +82,13 @@ export const MODULES: CourseModule[] = [
     number: '04',
     title: 'RISC-V (RV32I)',
     tagline: 'Registri, istruzioni e programmi in assembly RISC-V.',
-    topics: ['Memory layout', 'Gruppi di istruzioni e pseudo-istruzioni', 'Sezioni .text e .data, direttive, ABI', 'Flusso d’esecuzione', 'Estensione M (RV32IM)'],
+    topics: ['Memory layout', 'Gruppi di istruzioni e pseudo-istruzioni', 'Sezioni .text e .data, direttive, ABI', 'Flusso d’esecuzione', 'Funzioni, procedure e stack', 'Estensione M (RV32IM)'],
     icon: 'riscv',
     sources: [
       { lesson: 4, title: 'RISC-V (RV32I)' },
       { lesson: 5, title: 'Primi passi in RISC-V' },
       { lesson: 6, title: 'Gestire il flusso d’esecuzione in RISC-V' },
+      { lesson: 7, title: 'Funzioni e procedure in RISC-V' },
       { lesson: 9, title: 'RISC-V (RV32IM)' },
     ],
     availableSections: [],

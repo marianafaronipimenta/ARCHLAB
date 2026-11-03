@@ -1,6 +1,7 @@
 import { SECTION_IDS, SECTION_LABELS, type CourseModule } from '../../data/modules';
 import { ModuleArt } from '../art/ModuleArt';
-import { LockIcon } from '../art/Icons';
+import { moduleHref } from '../../router';
+import { ArrowRightIcon, LockIcon } from '../art/Icons';
 import { Panel } from '../ui/Panel';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -44,13 +45,15 @@ export function ModuleCard({ module, completion, recommended }: ModuleCardProps)
         {module.sources.length > 1 ? 'Lezioni' : 'Lezione'} {lessons}
       </p>
 
-      <button type="button" className="btn btn-module" disabled={!ready} aria-describedby={ready ? undefined : `${titleId}-status`}>
-        {ready ? 'Apri modulo' : (
-          <>
-            <LockIcon size={15} /> In costruzione
-          </>
-        )}
-      </button>
+      {ready ? (
+        <a className="btn btn-module btn-primary" href={moduleHref(module.id)} aria-label={`Apri il modulo ${module.number}: ${module.title}`}>
+          {completion > 0 ? 'Continua' : 'Apri modulo'} <ArrowRightIcon size={16} />
+        </a>
+      ) : (
+        <button type="button" className="btn btn-module" disabled aria-describedby={`${titleId}-status`}>
+          <LockIcon size={15} /> In costruzione
+        </button>
+      )}
       {!ready && (
         <span id={`${titleId}-status`} className="sr-only">
           Le sezioni di questo modulo non sono ancora disponibili.

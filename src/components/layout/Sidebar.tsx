@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { homeHref } from '../../router';
 import { HomeIcon, ModulesIcon, ProgressIcon, SettingsIcon, SimulatorIcon } from '../art/Icons';
 
 export type NavId = 'home' | 'moduli' | 'simulatori' | 'progressi';
@@ -16,7 +17,7 @@ interface SidebarProps {
   onOpenSettings: () => void;
 }
 
-/** Navigazione principale. Per ora porta alle sezioni della home; le pagine dei moduli arriveranno dopo. */
+/** Navigazione principale: porta alle sezioni della home (anche partendo da un modulo). */
 export function Sidebar({ active, onNavigate, onOpenSettings }: SidebarProps) {
   return (
     <nav className="sidebar" aria-label="Navigazione principale">
@@ -24,7 +25,7 @@ export function Sidebar({ active, onNavigate, onOpenSettings }: SidebarProps) {
         {ITEMS.map(({ id, label, Icon }) => (
           <li key={id}>
             <a
-              href={`#${id}`}
+              href={homeHref(id === 'home' ? undefined : id)}
               className={id === active ? 'sidebar-link is-active' : 'sidebar-link'}
               aria-current={id === active ? 'location' : undefined}
               onClick={(e) => {

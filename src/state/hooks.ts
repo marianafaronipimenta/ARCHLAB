@@ -1,18 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { STORAGE_KEY, loadProgress, type StudentProgress } from './progress';
-
-/** Progressi dello studente, riletti se cambiano in un’altra scheda del browser. */
-export function useProgress(): StudentProgress {
-  const [progress, setProgress] = useState<StudentProgress>(() => loadProgress());
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY) setProgress(loadProgress());
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
-  return progress;
-}
 
 /* ───────────── Preferenze di visualizzazione ───────────── */
 

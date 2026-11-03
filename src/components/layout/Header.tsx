@@ -10,7 +10,7 @@ interface HeaderProps {
 export function Header({ level, xpInto, xpNeeded }: HeaderProps) {
   return (
     <header className="topbar">
-      <a className="brand" href="#home" aria-label="ARCHLAB, torna all’inizio">
+      <a className="brand" href="#/" aria-label="ARCHLAB, torna all’inizio">
         <span className="brand-mark">
           <ChipMark size={34} />
         </span>
