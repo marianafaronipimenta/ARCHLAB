@@ -1,10 +1,12 @@
 import type { ModuleId } from '../data/modules';
 import { m01 } from './m01-approccio-strutturale';
+import { m02 } from './m02-assembly-object-executable';
 import type { ChoiceQuestion, Exercise, ModuleContent } from './types';
 
 /** Contenuti dei moduli già sviluppati. */
 const CONTENT: Partial<Record<ModuleId, ModuleContent>> = {
   'approccio-strutturale': m01,
+  'assembly-object-executable': m02,
 };
 
 export const getModuleContent = (id: ModuleId): ModuleContent | undefined => CONTENT[id];
@@ -42,6 +44,10 @@ export function validateContent(c: ModuleContent): string[] {
   for (const q of c.challenge.questions) if (q.hint) errors.push(`${q.id}: la Challenge non prevede suggerimenti`);
   const practiced = new Set([...c.practice, ...c.quiz.questions].map((q) => q.id));
   for (const q of c.challenge.questions) if (practiced.has(q.id)) errors.push(`${q.id}: domanda della Challenge riusata`);
+  // Il Quiz non ripete le domande della Practice (lo stesso concetto va chiesto al contrario o in un caso nuovo).
+  const norm = (t: string) => t.toLowerCase().replace(/\s+/g, ' ').trim();
+  const practicePrompts = new Set(c.practice.map((q) => norm(q.prompt)));
+  for (const q of c.quiz.questions) if (practicePrompts.has(norm(q.prompt))) errors.push(`${q.id}: domanda uguale a una della Practice`);
   if (c.quiz.questions.length < 5) errors.push(`${c.moduleId}: quiz troppo breve`);
   if (c.challenge.questions.length < 5) errors.push(`${c.moduleId}: challenge troppo breve`);
   return errors;

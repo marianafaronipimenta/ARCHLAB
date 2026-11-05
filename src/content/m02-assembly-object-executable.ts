@@ -1,0 +1,645 @@
+import type { ModuleContent } from './types';
+
+/*
+ * MODULO 02 — ASSEMBLY, OBJECT AND EXECUTABLE FILES
+ * Fonte: lezione 2 «Assembly, object, and executable files» (32 slide).
+ * I riferimenti «slide n» indicano la posizione nella presentazione.
+ *
+ * Regola per i contenuti: il Quiz non ripete le domande della Practice. Se riprende lo stesso concetto,
+ * lo chiede al contrario (es. Practice: «che cosa fa il linker?» → Quiz: data la definizione, «di quale strumento si parla?»).
+ */
+
+export const m02: ModuleContent = {
+  moduleId: 'assembly-object-executable',
+
+  /* ═════════════ LEARN ═════════════ */
+  learn: [
+    {
+      id: 'componenti',
+      title: 'I componenti principali di un computer',
+      slides: 'slide 3–4',
+      blocks: [
+        {
+          type: 'list',
+          items: [
+            'Memoria principale (RAM): conserva istruzioni e dati durante l’esecuzione; è volatile.',
+            'CPU: esegue i programmi, leggendo e scrivendo dalla memoria principale.',
+            'Memoria persistente: conserva dati e programmi anche senza alimentazione (HDD, SSD, flash).',
+            'Periferiche (I/O): dispositivi collegati come schede video, USB, rete.',
+            'Bus: sistema di comunicazione che trasferisce dati tra i componenti.',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'La memoria principale è organizzata in parole di memoria, ognuna con un indirizzo univoco. Nelle memorie byte-addressable ogni parola corrisponde (generalmente) a un byte: si accede direttamente a ciascun byte tramite il suo indirizzo.',
+        },
+        { type: 'code', code: 'indirizzo 0 → 00110110₂\nindirizzo 5 → 11111111₂', caption: 'Esempio delle slide: ogni indirizzo individua un byte' },
+      ],
+      keyPoints: ['RAM volatile, memoria persistente no', 'Byte-addressable: un indirizzo per ogni byte'],
+      checkId: 'p02-volatile',
+    },
+    {
+      id: 'cpu-datapath',
+      title: 'CPU e datapath',
+      slides: 'slide 5–6',
+      blocks: [
+        { type: 'p', text: 'La CPU è il cuore del computer ed esegue i programmi. È composta da:' },
+        {
+          type: 'list',
+          items: [
+            'Registri: piccole memorie interne molto veloci; accedervi è molto più rapido che accedere alla memoria principale.',
+            'Unità di controllo: coordina la CPU e gli altri componenti inviando comandi tramite il bus.',
+            'ALU (Arithmetic Logic Unit): esegue operazioni aritmetiche e logiche sui dati nei registri.',
+          ],
+        },
+        {
+          type: 'callout',
+          tone: 'info',
+          title: 'ISA',
+          text: 'L’insieme delle istruzioni che la CPU può eseguire è definito dall’Instruction Set Architecture: un programma scritto per una certa ISA può girare su qualsiasi CPU che la implementa.',
+        },
+        {
+          type: 'p',
+          text: 'Il datapath esegue le operazioni sui dati dei registri e rimette il risultato nei registri. In un modello semplificato i registri forniscono i dati alla ALU attraverso 2 bus di ingresso, la ALU calcola, e il risultato torna in un registro di destinazione attraverso un bus di uscita. Il numero di bus dipende dall’architettura.',
+        },
+      ],
+      keyPoints: ['Registri, unità di controllo, ALU', 'Datapath: registri → ALU → registri'],
+      checkId: 'p02-alu',
+    },
+    {
+      id: 'fetch-decode-execute',
+      title: 'Il ciclo fetch-decode-execute',
+      slides: 'slide 7',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Le istruzioni sono memorizzate in sequenza nella memoria principale e la CPU le preleva una alla volta. Il Program Counter (PC) tiene traccia della prossima istruzione da eseguire.',
+        },
+        { type: 'diagram', diagram: 'ciclo-fde' },
+        { type: 'p', text: 'Il ciclo si ripete continuamente fino al termine del programma.' },
+      ],
+      keyPoints: ['PC: indirizzo della prossima istruzione', 'IR: istruzione appena prelevata', 'Fetch → Decode → Execute'],
+      checkId: 'p02-pc-ir',
+    },
+    {
+      id: 'stored-program',
+      title: 'Lo stored program',
+      slides: 'slide 8–9',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Nei computer moderni istruzioni e dati (interi, caratteri, numeri in virgola mobile) sono rappresentati in bit, 0 e 1, corrispondenti a stati di tensione LOW/HIGH. Un programma è una sequenza di codici binari: la CPU interpreta alcuni di questi codici come istruzioni.',
+        },
+        { type: 'code', code: '0x7F, 0x45, 0x4C, 0x46, 0x02, 0x01, 0x01, 0x00, …', caption: 'Un programma visto come sequenza di byte' },
+        {
+          type: 'callout',
+          tone: 'info',
+          title: 'Stored program',
+          text: 'Programmi e dati sono trattati allo stesso modo: entrambi codificati in binario e memorizzati nella stessa memoria. All’esecuzione le istruzioni sono caricate in memoria insieme ai dati e la CPU le legge come leggerebbe i dati.',
+        },
+      ],
+      keyPoints: ['Istruzioni e dati nella stessa memoria, in binario'],
+      checkId: 'p02-stored',
+    },
+    {
+      id: 'traduttori-interpreti',
+      title: 'Un traduttore o un interprete tra ogni livello',
+      slides: 'slide 10–12',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Gestire direttamente bit, memoria e istruzioni macchina sarebbe lento e soggetto a errori: per questo il sistema è organizzato in livelli. Tra due livelli serve un programma che renda il codice di Li+1 eseguibile dalla macchina Mi.',
+        },
+        {
+          type: 'list',
+          items: [
+            'Compilatore (traduttore): da L5 (C) a L4 (assembly).',
+            'Assemblatore (traduttore): da L4 (assembly) a L2 (codice macchina).',
+            'Unità di controllo (interprete): esegue le istruzioni dell’ISA (L2) sull’hardware.',
+            'Microsequencer (interprete): esegue le istruzioni complesse come sequenze di microistruzioni (L1).',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'Finora avete eseguito gcc main.c -o main e poi ./main senza chiedervi che cosa succedesse dietro le quinte: è proprio l’astrazione dei livelli a permetterlo.',
+        },
+      ],
+      keyPoints: ['Compilatore e assemblatore: traduttori', 'Unità di controllo e microsequencer: interpreti'],
+      checkId: 'p02-traduttore-interprete',
+    },
+    {
+      id: 'preprocessore-compilatore',
+      title: 'Preprocessore e compilatore',
+      slides: 'slide 13–15',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Il preprocessore è la prima fase della traduzione di un programma C: espande le macro, include gli header, gestisce la compilazione condizionale e produce un sorgente esteso per il compilatore. Non genera codice macchina e non controlla la semantica; oggi è integrato nella toolchain (gcc, clang).',
+        },
+        {
+          type: 'p',
+          text: 'Il compilatore traduce l’intero sorgente di alto livello in linguaggio assembly (la forma mnemonica dell’ISA). Spesso include il preprocessore.',
+        },
+        { type: 'code', code: 'gcc -S main.c -o main.s     # -S: genera assembly invece del file oggetto' },
+        {
+          type: 'code',
+          code: 'main:\n    subq    $16, %rsp\n    movl    $10, %edi\n    movl    $0, %eax\n    call    func@PLT\n    …',
+          caption: 'Parte del file main.s generato da int r = func(10); (assembly x86)',
+        },
+      ],
+      keyPoints: ['Preprocessore: trasformazioni testuali', 'Compilatore: C → assembly (L5 → L4)'],
+      checkId: 'p02-preprocessore',
+    },
+    {
+      id: 'assemblatore-oggetto',
+      title: 'Assemblatore e file oggetto',
+      slides: 'slide 16–18',
+      blocks: [
+        {
+          type: 'p',
+          text: 'L’assemblatore traduce l’assembly in codice macchina e risolve le pseudo-istruzioni. Il risultato è il file oggetto (.o), binario: contiene istruzioni eseguibili dall’hardware ma non è ancora eseguibile.',
+        },
+        { type: 'code', code: 'gcc -c main.s -o main.o     # -c: compila soltanto (assembly → oggetto)' },
+        {
+          type: 'callout',
+          tone: 'warn',
+          title: 'Perché il file oggetto non è eseguibile?',
+          text: 'Un sorgente può usare funzioni o variabili definite in un altro file del programma. Il nome di una funzione o variabile definita altrove ma usata nel file corrente è un simbolo esterno: finché non viene collegato alla sua definizione, il programma è incompleto.',
+        },
+      ],
+      keyPoints: ['Assemblatore: assembly → file oggetto (L4 → L2 parziale)', 'Simbolo esterno: definito in un altro file'],
+      checkId: 'p02-simbolo-esterno',
+    },
+    {
+      id: 'linker',
+      title: 'Il linker e la compilazione separata',
+      slides: 'slide 19–22',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Il compilatore riconosce un simbolo esterno perché è dichiarato, ma non ne trova la definizione nel file che sta traducendo. La risoluzione dei simboli è demandata al linker, che collega ogni simbolo alla sua definizione in un altro file oggetto (o in una libreria) e produce l’eseguibile.',
+        },
+        {
+          type: 'p',
+          text: 'L’eseguibile è binario come il file oggetto, ma contiene tutto il necessario per l’esecuzione, comprese librerie e funzioni esterne.',
+        },
+        { type: 'diagram', diagram: 'catena-traduzione' },
+        {
+          type: 'code',
+          code: 'gcc -c main.c -o main.o\ngcc -c funzioni.c -o funzioni.o\ngcc main.o funzioni.o -o programma',
+          caption: 'Compilazione separata: è ciò che fa make con un Makefile. Il comando unico gcc main.c -o main esegue tutti i passaggi insieme.',
+        },
+      ],
+      keyPoints: ['Linker: risolve i simboli esterni', 'Più file oggetto + librerie → un eseguibile'],
+      checkId: 'p02-ordina-catena',
+    },
+    {
+      id: 'esecuzione',
+      title: 'Esecuzione: loader, unità di controllo, microsequencer',
+      slides: 'slide 24–26',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Il loader del sistema operativo (L3) carica il programma in memoria, assegna le risorse (CPU, memoria, I/O), inizializza stack e heap e lo avvia, creando un processo con il suo spazio di indirizzamento. Il sistema operativo offre anche astrazioni come file, terminale e rete tramite le system call.',
+        },
+        {
+          type: 'list',
+          items: [
+            'Unità di controllo (interprete): legge e decodifica le istruzioni macchina dalla memoria e genera i segnali di controllo (fetch-decode-execute).',
+            'Microsequencer (interprete): gestisce le sequenze di microistruzioni per le istruzioni complesse; presente soprattutto nelle CPU CISC, assente nelle RISC, dove il controllo è hardwired.',
+          ],
+        },
+        { type: 'code', code: './main     # esecuzione con il supporto del sistema operativo (L3 + L1–L0)' },
+      ],
+      keyPoints: ['Loader: dall’eseguibile al processo', 'Microsequencer: CISC; controllo hardwired: RISC'],
+      checkId: 'p02-loader',
+    },
+    {
+      id: 'cisc-risc',
+      title: 'Assembly, CISC e RISC',
+      slides: 'slide 27–31',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Leggere i numeri binari delle istruzioni è difficile: tradotti in stringhe alfanumeriche diventano il linguaggio assembly, che riflette fedelmente il linguaggio macchina e richiede un assemblatore. Ogni CPU ha la propria ISA, quindi il proprio assembly.',
+        },
+        {
+          type: 'callout',
+          tone: 'info',
+          title: 'CISC (Complex Instruction Set Computer)',
+          text: 'Molte istruzioni, anche complesse: programmi con meno istruzioni, ma ogni istruzione può essere lenta o avere tempi variabili. Esempio: famiglia x86 (Intel, AMD).',
+        },
+        {
+          type: 'callout',
+          tone: 'info',
+          title: 'RISC (Reduced Instruction Set Computer)',
+          text: 'Poche istruzioni semplici e uniformi: servono più istruzioni per compiti complessi, ma ognuna è veloce, regolare e parallelizzabile. Esempi: ARM (smartphone, Apple M-series, alcuni Snapdragon), MIPS (didattica, router), RISC-V (open-source).',
+        },
+        {
+          type: 'p',
+          text: 'Queste scelte influenzano la pipeline, il compilatore, l’efficienza energetica e le prestazioni. Nei processori moderni i confini non sono rigidi: spesso si usano soluzioni ibride.',
+        },
+      ],
+      keyPoints: ['Ogni ISA ha il proprio assembly', 'CISC: x86 · RISC: ARM, MIPS, RISC-V'],
+      checkId: 'p02-cisc-risc',
+    },
+  ],
+
+  /* ═════════════ PRACTICE ═════════════ */
+  practice: [
+    {
+      kind: 'choice',
+      id: 'p02-volatile',
+      prompt: 'Quale componente conserva istruzioni e dati durante l’esecuzione ma perde il contenuto senza alimentazione?',
+      options: [
+        { id: 'a', text: 'La memoria principale (RAM)', feedback: 'Esatto: la RAM è volatile.' },
+        { id: 'b', text: 'Un SSD', feedback: 'L’SSD è memoria persistente: conserva i dati anche senza alimentazione.' },
+        { id: 'c', text: 'Il bus', feedback: 'Il bus trasferisce dati tra componenti, non li conserva.' },
+        { id: 'd', text: 'Una periferica USB', feedback: 'Le periferiche sono dispositivi di I/O.' },
+      ],
+      correct: 'a',
+      explanation: 'RAM: volatile, usata durante l’esecuzione. Memoria persistente (HDD, SSD, flash): conserva i dati a macchina spenta.',
+      hint: 'Pensa a che cosa succede quando spegni il computer.',
+      learnRef: 'componenti',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-alu',
+      prompt: 'Che cosa fa la ALU?',
+      options: [
+        { id: 'a', text: 'Esegue operazioni aritmetiche e logiche sui dati nei registri', feedback: 'Esatto.' },
+        { id: 'b', text: 'Coordina la CPU e invia comandi tramite il bus', feedback: 'Questo è il compito dell’unità di controllo.' },
+        { id: 'c', text: 'Conserva temporaneamente dati e istruzioni', feedback: 'Questo è il compito dei registri.' },
+        { id: 'd', text: 'Carica il programma in memoria', feedback: 'Questo lo fa il loader del sistema operativo.' },
+      ],
+      correct: 'a',
+      explanation: 'ALU = Arithmetic Logic Unit: somme, sottrazioni, confronti, condizioni.',
+      hint: 'Leggi per esteso la sigla.',
+      learnRef: 'cpu-datapath',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-pc-ir',
+      prompt: 'Durante la fase di fetch, che cosa succede a PC e IR?',
+      options: [
+        { id: 'a', text: 'L’istruzione indicata dal PC viene copiata nell’IR e il PC viene aggiornato alla prossima istruzione', feedback: 'Esatto.' },
+        { id: 'b', text: 'L’IR indica l’indirizzo della prossima istruzione e il PC contiene l’istruzione corrente', feedback: 'I ruoli sono invertiti.' },
+        { id: 'c', text: 'Il PC viene azzerato a ogni istruzione', feedback: 'Il PC avanza, non si azzera.' },
+        { id: 'd', text: 'Nessuno dei due cambia: cambiano solo durante l’execute', feedback: 'Nel fetch l’IR riceve l’istruzione e il PC si aggiorna.' },
+      ],
+      correct: 'a',
+      explanation: 'PC = Program Counter (dove si trova la prossima istruzione); IR = Instruction Register (l’istruzione appena letta).',
+      hint: 'Il PC «conta», l’IR «contiene».',
+      learnRef: 'fetch-decode-execute',
+    },
+    {
+      kind: 'order',
+      id: 'p02-ordina-fde',
+      prompt: 'Riordina le fasi di esecuzione di un’istruzione.',
+      items: [
+        { id: 'f', text: 'Fetch: leggi l’istruzione dalla memoria e aggiorna il PC' },
+        { id: 'd', text: 'Decode: interpreta l’istruzione e individua registri e dati' },
+        { id: 'e', text: 'Execute: esegui l’operazione, eventualmente leggendo o scrivendo memoria e registri' },
+      ],
+      explanation: 'Fetch, decode, execute; poi il ciclo ricomincia con l’istruzione successiva.',
+      hint: 'Non si può interpretare un’istruzione prima di averla letta.',
+      learnRef: 'fetch-decode-execute',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-stored',
+      prompt: 'Che cosa afferma il concetto di stored program?',
+      options: [
+        { id: 'a', text: 'Programmi e dati sono codificati in binario e memorizzati nella stessa memoria', feedback: 'Esatto: la CPU legge le istruzioni come leggerebbe i dati.' },
+        { id: 'b', text: 'I programmi sono memorizzati su disco e mai in RAM', feedback: 'Per essere eseguiti i programmi vengono caricati in memoria.' },
+        { id: 'c', text: 'Le istruzioni sono cablate nell’hardware e non si possono cambiare', feedback: 'È il contrario: il programma è un dato in memoria, quindi si può cambiare.' },
+        { id: 'd', text: 'I dati sono in binario, le istruzioni in testo', feedback: 'Anche le istruzioni sono in binario.' },
+      ],
+      correct: 'a',
+      explanation: 'Un programma è una sequenza di codici binari; alcuni vengono interpretati dalla CPU come istruzioni.',
+      hint: 'Dove stanno le istruzioni rispetto ai dati?',
+      learnRef: 'stored-program',
+    },
+    {
+      kind: 'match',
+      id: 'p02-traduttore-interprete',
+      prompt: 'Abbina ogni componente al ruolo che svolge tra i livelli.',
+      pairs: [
+        { id: 'comp', left: 'Compilatore', right: 'Traduttore: dal C (L5) all’assembly (L4)', feedback: 'Traduce l’intero sorgente in assembly.' },
+        { id: 'asm', left: 'Assemblatore', right: 'Traduttore: dall’assembly (L4) al codice macchina (L2)', feedback: 'Produce il file oggetto.' },
+        { id: 'cu', left: 'Unità di controllo', right: 'Interprete: esegue le istruzioni dell’ISA con il ciclo fetch-decode-execute', feedback: 'Genera i segnali di controllo per ogni istruzione.' },
+        { id: 'micro', left: 'Microsequencer', right: 'Interprete: esegue le istruzioni complesse come sequenze di microistruzioni', feedback: 'Tipico delle CPU CISC.' },
+      ],
+      explanation: 'I primi due producono un nuovo programma (traduzione); gli ultimi due eseguono istruzione per istruzione (interpretazione).',
+      hint: 'Chi produce un file e chi esegue?',
+      learnRef: 'traduttori-interpreti',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-preprocessore',
+      prompt: 'Quale di queste operazioni NON è compito del preprocessore?',
+      options: [
+        { id: 'a', text: 'Espandere le macro', feedback: 'È proprio un compito del preprocessore.' },
+        { id: 'b', text: 'Includere gli header con #include', feedback: 'È proprio un compito del preprocessore.' },
+        { id: 'c', text: 'Gestire la compilazione condizionale', feedback: 'È proprio un compito del preprocessore.' },
+        { id: 'd', text: 'Generare codice macchina', feedback: 'Esatto: il preprocessore fa solo trasformazioni testuali, non genera codice macchina né controlla la semantica.' },
+      ],
+      correct: 'd',
+      explanation: 'Il preprocessore produce un sorgente esteso, ancora testo, che diventa l’input del compilatore.',
+      hint: 'Il preprocessore lavora sul testo.',
+      learnRef: 'preprocessore-compilatore',
+    },
+    {
+      kind: 'match',
+      id: 'p02-comandi',
+      prompt: 'Abbina ogni comando gcc al file che produce.',
+      pairs: [
+        { id: 's', left: 'gcc -S main.c -o main.s', right: 'File assembly (testo)', feedback: '-S ferma la traduzione dopo il compilatore.' },
+        { id: 'c', left: 'gcc -c main.s -o main.o', right: 'File oggetto (binario, non eseguibile)', feedback: '-c esegue solo l’assemblatore, senza linking.' },
+        { id: 'l', left: 'gcc main.o -o main', right: 'File eseguibile', feedback: 'Senza opzioni gcc esegue il linker.' },
+      ],
+      explanation: '-S → assembly; -c → oggetto; nessuna opzione → eseguibile (gcc main.c -o main fa tutto insieme).',
+      hint: 'S come aSSembly, c come «compile only».',
+      learnRef: 'linker',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-simbolo-esterno',
+      prompt: 'Perché il file oggetto prodotto dall’assemblatore non è ancora eseguibile?',
+      options: [
+        { id: 'a', text: 'Perché è scritto in testo e non in binario', feedback: 'Il file oggetto è già binario.' },
+        { id: 'b', text: 'Perché può contenere riferimenti a funzioni o variabili definite in altri file (simboli esterni) non ancora risolti', feedback: 'Esatto: servirà il linker.' },
+        { id: 'c', text: 'Perché manca il preprocessore', feedback: 'Il preprocessore lavora prima del compilatore.' },
+        { id: 'd', text: 'Perché contiene ancora pseudo-istruzioni', feedback: 'Le pseudo-istruzioni le risolve proprio l’assemblatore.' },
+      ],
+      correct: 'b',
+      explanation: 'Un simbolo esterno è dichiarato ma definito altrove: va collegato alla sua definizione.',
+      hint: 'Che cosa manca quando il programma è diviso in più file?',
+      learnRef: 'assemblatore-oggetto',
+    },
+    {
+      kind: 'order',
+      id: 'p02-ordina-catena',
+      prompt: 'Riordina i passaggi da main.c al programma in esecuzione.',
+      items: [
+        { id: 'pre', text: 'Preprocessore: espande macro e #include' },
+        { id: 'comp', text: 'Compilatore: genera main.s' },
+        { id: 'asm', text: 'Assemblatore: genera main.o' },
+        { id: 'link', text: 'Linker: genera l’eseguibile' },
+        { id: 'load', text: 'Loader: carica il programma in memoria e crea il processo' },
+      ],
+      explanation: 'Preprocessore → compilatore → assemblatore → linker → loader.',
+      hint: 'Ogni strumento usa l’output del precedente.',
+      learnRef: 'linker',
+    },
+    {
+      kind: 'choice',
+      id: 'p02-loader',
+      prompt: 'Che cosa fa il loader del sistema operativo?',
+      options: [
+        { id: 'a', text: 'Carica il programma in memoria, assegna le risorse, inizializza stack e heap e avvia il processo', feedback: 'Esatto.' },
+        { id: 'b', text: 'Risolve i simboli esterni', feedback: 'Questo è il linker, che lavora prima.' },
+        { id: 'c', text: 'Decodifica le istruzioni macchina', feedback: 'Questo è l’unità di controllo.' },
+        { id: 'd', text: 'Traduce l’assembly in binario', feedback: 'Questo è l’assemblatore.' },
+      ],
+      correct: 'a',
+      explanation: 'Il loader (L3) trasforma l’eseguibile in un processo con il suo spazio di indirizzamento.',
+      hint: 'Interviene quando digiti ./main.',
+      learnRef: 'esecuzione',
+    },
+    {
+      kind: 'match',
+      id: 'p02-cisc-risc',
+      prompt: 'Abbina ogni processore o famiglia alla sua filosofia.',
+      pairs: [
+        { id: 'x86', left: 'x86 (Intel, AMD)', right: 'CISC', feedback: 'Molte istruzioni, anche complesse.' },
+        { id: 'arm', left: 'ARM (smartphone, Apple M-series)', right: 'RISC', feedback: 'Istruzioni semplici e uniformi.' },
+        { id: 'micro', left: 'CPU con microsequencer per istruzioni complesse', right: 'Tipico delle CPU CISC', feedback: 'Le istruzioni complesse diventano microistruzioni.' },
+        { id: 'hard', left: 'CPU con controllo hardwired e istruzioni semplici', right: 'Tipico delle CPU RISC', feedback: 'Niente microsequencer.' },
+      ],
+      explanation: 'CISC: x86, istruzioni complesse e microsequencer. RISC: ARM, MIPS, RISC-V, controllo hardwired.',
+      hint: 'C sta per Complex, R per Reduced.',
+      learnRef: 'cisc-risc',
+    },
+  ],
+
+  /* ═════════════ QUIZ ═════════════
+   * Nessuna domanda della Practice: stessi concetti chiesti al contrario o in situazioni nuove. */
+  quiz: {
+    intro: 'Otto domande nuove rispetto alla Practice: qui spesso trovi la definizione e devi riconoscere il concetto. Il quiz è superato con almeno il 60%.',
+    questions: [
+      {
+        kind: 'choice',
+        id: 'q02-def-linker',
+        prompt: '«Collega ogni simbolo esterno alla sua definizione presente in un altro file oggetto o in una libreria, e produce un file eseguibile.» Di quale strumento si parla?',
+        options: [
+          { id: 'a', text: 'Linker', feedback: 'Esatto: è la risoluzione dei simboli.' },
+          { id: 'b', text: 'Assemblatore', feedback: 'L’assemblatore produce il file oggetto, con i simboli esterni ancora irrisolti.' },
+          { id: 'c', text: 'Loader', feedback: 'Il loader carica un eseguibile già completo.' },
+          { id: 'd', text: 'Preprocessore', feedback: 'Il preprocessore fa solo trasformazioni testuali.' },
+        ],
+        correct: 'a',
+        explanation: 'Il linker unisce file oggetto e librerie in un unico eseguibile.',
+        hint: 'To link = collegare.',
+        learnRef: 'linker',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-def-simbolo',
+        prompt: '«Nome di una funzione o di una variabile definita in un altro file sorgente, ma usata nel file corrente.» Come si chiama?',
+        options: [
+          { id: 'a', text: 'Simbolo esterno', feedback: 'Esatto.' },
+          { id: 'b', text: 'Pseudo-istruzione', feedback: 'Una pseudo-istruzione è un’istruzione assembly che l’assemblatore espande.' },
+          { id: 'c', text: 'Macro', feedback: 'Le macro le espande il preprocessore, nello stesso file.' },
+          { id: 'd', text: 'Registro', feedback: 'Un registro è una memoria della CPU.' },
+        ],
+        correct: 'a',
+        explanation: 'È la ragione per cui il file oggetto non è ancora eseguibile.',
+        hint: 'È definito «fuori» dal file.',
+        learnRef: 'assemblatore-oggetto',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-def-stored',
+        prompt: '«Istruzioni e dati sono codificati in binario e conservati nella stessa memoria; la CPU legge le istruzioni come legge i dati.» Quale principio descrive?',
+        options: [
+          { id: 'a', text: 'Stored program', feedback: 'Esatto.' },
+          { id: 'b', text: 'Compilazione separata', feedback: 'La compilazione separata riguarda più file sorgente collegati dal linker.' },
+          { id: 'c', text: 'Byte-addressable', feedback: 'Indica che ogni byte ha un indirizzo, non dove stanno le istruzioni.' },
+          { id: 'd', text: 'Controllo hardwired', feedback: 'Riguarda l’unità di controllo delle CPU RISC.' },
+        ],
+        correct: 'a',
+        explanation: 'Programma memorizzato: il programma è un dato in memoria.',
+        hint: 'Il programma è «memorizzato» come un dato.',
+        learnRef: 'stored-program',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-registro-pc',
+        prompt: 'Quale registro contiene l’indirizzo della prossima istruzione da eseguire?',
+        options: [
+          { id: 'a', text: 'Il Program Counter (PC)', feedback: 'Esatto.' },
+          { id: 'b', text: 'Il registro delle istruzioni (IR)', feedback: 'L’IR contiene l’istruzione appena prelevata, non un indirizzo.' },
+          { id: 'c', text: 'Un registro della ALU', feedback: 'La ALU usa i registri dei dati.' },
+          { id: 'd', text: 'Lo stack pointer', feedback: 'Lo stack pointer indica la cima dello stack.' },
+        ],
+        correct: 'a',
+        explanation: 'Il PC viene aggiornato durante il fetch.',
+        hint: 'Il nome dice che «conta».',
+        learnRef: 'fetch-decode-execute',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-file-o',
+        prompt: 'Hai un file .o. Che cosa sai di lui?',
+        options: [
+          { id: 'a', text: 'È binario, contiene codice macchina, ma può avere simboli esterni irrisolti', feedback: 'Esatto: è un file oggetto.' },
+          { id: 'b', text: 'È testo leggibile in assembly', feedback: 'Quello è il file .s.' },
+          { id: 'c', text: 'Si può eseguire direttamente con ./', feedback: 'Prima serve il linker.' },
+          { id: 'd', text: 'È l’output del preprocessore', feedback: 'Il preprocessore produce un sorgente esteso (testo).' },
+        ],
+        correct: 'a',
+        explanation: '.c e .s sono testo; .o ed eseguibile sono binari, ma solo l’eseguibile è completo.',
+        hint: '«o» come oggetto.',
+        learnRef: 'assemblatore-oggetto',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-def-microsequencer',
+        prompt: '«Gestisce la sequenza di microistruzioni con cui si eseguono istruzioni macchina complesse; è assente dove il controllo è hardwired.» Di che cosa si parla?',
+        options: [
+          { id: 'a', text: 'Microsequencer', feedback: 'Esatto: tipico delle CPU CISC.' },
+          { id: 'b', text: 'Linker', feedback: 'Il linker lavora sui file, non sulle microistruzioni.' },
+          { id: 'c', text: 'ALU', feedback: 'La ALU esegue operazioni, non gestisce sequenze di microistruzioni.' },
+          { id: 'd', text: 'Assemblatore', feedback: 'L’assemblatore traduce, non interpreta a runtime.' },
+        ],
+        correct: 'a',
+        explanation: 'Nelle CPU RISC le istruzioni sono semplici e il controllo è hardwired: niente microsequencer.',
+        hint: 'Gestisce «micro» istruzioni in «sequenza».',
+        learnRef: 'esecuzione',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-caratteristiche-risc',
+        prompt: '«Poche istruzioni semplici e uniformi; servono più istruzioni per compiti complessi, ma ognuna è veloce e parallelizzabile.» Quale filosofia, e quale esempio?',
+        options: [
+          { id: 'a', text: 'RISC, per esempio RISC-V', feedback: 'Esatto.' },
+          { id: 'b', text: 'CISC, per esempio x86', feedback: 'Il CISC ha molte istruzioni, anche complesse e con tempi variabili.' },
+          { id: 'c', text: 'RISC, per esempio x86', feedback: 'x86 è CISC.' },
+          { id: 'd', text: 'CISC, per esempio ARM', feedback: 'ARM è RISC.' },
+        ],
+        correct: 'a',
+        explanation: 'RISC: ARM, MIPS, RISC-V. CISC: x86.',
+        hint: 'Reduced = poche.',
+        learnRef: 'cisc-risc',
+      },
+      {
+        kind: 'choice',
+        id: 'q02-makefile',
+        prompt: 'Un Makefile contiene le regole qui sotto. Quale strumento viene usato nell’ultima riga?',
+        code: 'gcc -c main.c -o main.o\ngcc -c funzioni.c -o funzioni.o\ngcc main.o funzioni.o -o programma',
+        options: [
+          { id: 'a', text: 'Il linker, che unisce i due file oggetto in un eseguibile', feedback: 'Esatto: è la compilazione separata.' },
+          { id: 'b', text: 'Il compilatore, che traduce funzioni.c', feedback: 'funzioni.c è già stato tradotto nella seconda riga.' },
+          { id: 'c', text: 'Il loader', feedback: 'Il loader interviene solo eseguendo ./programma.' },
+          { id: 'd', text: 'Il preprocessore', feedback: 'Il preprocessore lavora sui sorgenti, non sui .o.' },
+        ],
+        correct: 'a',
+        explanation: 'Con -c si ottengono i .o; senza opzioni gcc li collega in un eseguibile.',
+        hint: 'L’input sono file .o.',
+        learnRef: 'linker',
+      },
+    ],
+  },
+
+  /* ═════════════ CHALLENGE ═════════════ */
+  challenge: {
+    intro: 'Sei domande su scenari nuovi. Nessun suggerimento e una sola risposta per domanda: l’esito e le spiegazioni compaiono alla fine. È facoltativa.',
+    questions: [
+      {
+        kind: 'choice',
+        id: 'c02-undefined',
+        prompt: 'main.c chiama func(), definita in util.c. Esegui gcc main.c -o main e ottieni un errore «undefined reference to func». In quale fase si è fermata la costruzione e perché?',
+        options: [
+          { id: 'a', text: 'Nel linking: il simbolo esterno func non trova una definizione, perché util.c non è stato incluso', feedback: 'Esatto: serve gcc main.c util.c -o main (o i rispettivi .o).' },
+          { id: 'b', text: 'Nel preprocessore: manca la macro func', feedback: 'func è una funzione, non una macro.' },
+          { id: 'c', text: 'Nell’assemblatore: func non è un’istruzione valida', feedback: 'L’assemblatore lascia func come simbolo esterno da risolvere.' },
+          { id: 'd', text: 'Nel loader: il programma non entra in memoria', feedback: 'L’eseguibile non è nemmeno stato creato.' },
+        ],
+        correct: 'a',
+        explanation: 'I riferimenti esterni si risolvono solo nel linking.',
+        learnRef: 'linker',
+      },
+      {
+        kind: 'choice',
+        id: 'c02-dimensione',
+        prompt: 'Confronti main.o e l’eseguibile main costruito con la libreria standard. Perché l’eseguibile contiene più codice?',
+        options: [
+          { id: 'a', text: 'Perché il linker vi ha aggiunto il codice di librerie e funzioni esterne necessarie all’esecuzione', feedback: 'Esatto.' },
+          { id: 'b', text: 'Perché l’eseguibile è in testo e il .o in binario', feedback: 'Sono entrambi binari.' },
+          { id: 'c', text: 'Perché il loader ha aggiunto lo stack', feedback: 'Lo stack viene creato all’esecuzione, non nel file.' },
+          { id: 'd', text: 'Perché l’eseguibile contiene ancora l’assembly', feedback: 'L’eseguibile contiene codice macchina.' },
+        ],
+        correct: 'a',
+        explanation: 'L’eseguibile contiene tutti gli elementi necessari all’esecuzione.',
+        learnRef: 'linker',
+      },
+      {
+        kind: 'choice',
+        id: 'c02-portabilita',
+        prompt: 'Un eseguibile compilato per x86 non parte su un Mac con processore Apple M-series (ARM) senza strumenti aggiuntivi. Perché?',
+        options: [
+          { id: 'a', text: 'Perché le due CPU implementano ISA diverse: il codice macchina di una non è comprensibile all’altra', feedback: 'Esatto: un programma gira su qualsiasi CPU che implementa la stessa ISA.' },
+          { id: 'b', text: 'Perché il Mac non ha un loader', feedback: 'Ogni sistema operativo ha un loader.' },
+          { id: 'c', text: 'Perché ARM non ha registri', feedback: 'Tutte le CPU hanno registri.' },
+          { id: 'd', text: 'Perché il file è ancora un file oggetto', feedback: 'È un eseguibile completo, ma per un’altra ISA.' },
+        ],
+        correct: 'a',
+        explanation: 'x86 è CISC, ARM è RISC: linguaggi macchina diversi.',
+        learnRef: 'cpu-datapath',
+      },
+      {
+        kind: 'choice',
+        id: 'c02-gcc-s',
+        prompt: 'Vuoi vedere l’assembly prodotto per il tuo programma C senza creare file oggetto né eseguibile. Quale comando usi?',
+        options: [
+          { id: 'a', text: 'gcc -S prog.c -o prog.s', feedback: 'Esatto: -S si ferma dopo la compilazione.' },
+          { id: 'b', text: 'gcc -c prog.c -o prog.o', feedback: '-c produce il file oggetto.' },
+          { id: 'c', text: 'gcc prog.c -o prog', feedback: 'Produce direttamente l’eseguibile.' },
+          { id: 'd', text: './prog', feedback: 'Esegue un programma già costruito.' },
+        ],
+        correct: 'a',
+        explanation: '-S: genera assembly invece del file oggetto.',
+        learnRef: 'preprocessore-compilatore',
+      },
+      {
+        kind: 'choice',
+        id: 'c02-byte',
+        prompt: 'In una memoria byte-addressable, un intero da 4 byte memorizzato a partire dall’indirizzo 8 occupa quali indirizzi?',
+        options: [
+          { id: 'a', text: '8, 9, 10, 11', feedback: 'Esatto: ogni byte ha il proprio indirizzo.' },
+          { id: 'b', text: 'Solo l’indirizzo 8', feedback: 'Un indirizzo individua un solo byte.' },
+          { id: 'c', text: '8, 12, 16, 20', feedback: 'Questi sarebbero gli indirizzi di quattro interi consecutivi.' },
+          { id: 'd', text: '8 e 9', feedback: 'Così occuperebbe 2 byte.' },
+        ],
+        correct: 'a',
+        explanation: 'Byte-addressable: un indirizzo per ogni byte, quindi 4 byte = 4 indirizzi consecutivi.',
+        learnRef: 'componenti',
+      },
+      {
+        kind: 'choice',
+        id: 'c02-livelli-strumenti',
+        prompt: 'Quale coppia «strumento → tecnica» è corretta?',
+        options: [
+          { id: 'a', text: 'Assemblatore → traduzione; unità di controllo → interpretazione', feedback: 'Esatto.' },
+          { id: 'b', text: 'Compilatore → interpretazione; microsequencer → traduzione', feedback: 'È il contrario.' },
+          { id: 'c', text: 'Linker → interpretazione', feedback: 'Il linker produce un nuovo file: non interpreta.' },
+          { id: 'd', text: 'Unità di controllo → traduzione', feedback: 'L’unità di controllo esegue istruzione per istruzione: interpreta.' },
+        ],
+        correct: 'a',
+        explanation: 'Traduttori: compilatore e assemblatore. Interpreti: unità di controllo e microsequencer.',
+        learnRef: 'traduttori-interpreti',
+      },
+    ],
+  },
+};

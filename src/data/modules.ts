@@ -65,7 +65,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Catena di traduzione', 'Compilatore, assemblatore, linker, loader', 'File .c, .s, .o ed eseguibili', 'Simboli esterni'],
     icon: 'files',
     sources: [{ lesson: 2, title: 'Assembly, object, and executable files' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'isa',
