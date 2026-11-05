@@ -1,6 +1,7 @@
 import type { ModuleId } from './modules';
 
-/** Simulatori previsti. Nessuno è ancora disponibile: la home li mostra come «in sviluppo». */
+/** Simulatori previsti. Nessuno è ancora disponibile come strumento autonomo: la home li mostra come «in sviluppo».
+ *  Alcuni hanno già una versione base dentro una pagina Learn (`preview`). */
 export type SimulatorStatus = 'planned' | 'available';
 
 export interface Simulator {
@@ -9,6 +10,8 @@ export interface Simulator {
   description: string;
   relatedModules: ModuleId[];
   status: SimulatorStatus;
+  /** Versione base già usabile in una pagina Learn. */
+  preview?: { moduleId: ModuleId; page: string; label: string };
 }
 
 export const SIMULATORS: Simulator[] = [
@@ -32,6 +35,7 @@ export const SIMULATORS: Simulator[] = [
     description: 'Data path e segnali di controllo per istruzioni R, load/store e beq.',
     relatedModules: ['processore'],
     status: 'planned',
+    preview: { moduleId: 'processore', page: 'unita-controllo', label: 'Versione base: segnali dell’unità di controllo (modulo 06)' },
   },
   {
     id: 'pipeline-cicli',
@@ -39,6 +43,7 @@ export const SIMULATORS: Simulator[] = [
     description: 'Diagramma multi-ciclo a 5 stadi con hazard, stalli e forwarding.',
     relatedModules: ['pipeline'],
     status: 'planned',
+    preview: { moduleId: 'pipeline', page: 'diagrammi', label: 'Versione base: diagramma multi-ciclo (modulo 07)' },
   },
 ];
 

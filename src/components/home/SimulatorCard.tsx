@@ -1,4 +1,5 @@
 import { getModule } from '../../data/modules';
+import { moduleHref } from '../../router';
 import type { Simulator } from '../../data/catalog';
 import { SimulatorIcon } from '../art/Icons';
 import { Panel } from '../ui/Panel';
@@ -19,6 +20,11 @@ export function SimulatorCard({ simulator }: { simulator: Simulator }) {
           <span className="tag">{simulator.status === 'available' ? 'Disponibile' : 'In sviluppo'}</span>
           <span>Moduli {modules}</span>
         </p>
+        {simulator.preview && (
+          <p className="sim-preview">
+            <a href={moduleHref(simulator.preview.moduleId, 'learn', simulator.preview.page)}>{simulator.preview.label} →</a>
+          </p>
+        )}
       </div>
     </Panel>
   );

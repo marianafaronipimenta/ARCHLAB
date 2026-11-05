@@ -125,7 +125,7 @@ export const MODULES: CourseModule[] = [
       { lesson: 12, title: 'Pipeline: hazard sui dati' },
       { lesson: 13, title: 'Pipeline: hazard sul controllo' },
     ],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
 ];
 

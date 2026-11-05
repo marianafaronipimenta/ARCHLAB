@@ -5,6 +5,8 @@ import { FetchDecodeDiagram } from './FetchDecodeDiagram';
 import { InterpreterDiagram } from './InterpreterDiagram';
 import { MemoryLayoutDiagram } from './MemoryLayoutDiagram';
 import { LevelsDiagram } from './LevelsDiagram';
+import { PipelineDiagram } from './PipelineDiagram';
+import { PredictorDiagram } from './PredictorDiagram';
 import { LocationCounterDiagram } from './LocationCounterDiagram';
 import { RpnDiagram } from './RpnDiagram';
 import { ToolchainDiagram } from './ToolchainDiagram';
@@ -21,6 +23,8 @@ const DIAGRAMS: Record<DiagramId, () => JSX.Element> = {
   'memory-layout': MemoryLayoutDiagram,
   'location-counter': LocationCounterDiagram,
   controllo: ControlUnitDiagram,
+  pipeline: PipelineDiagram,
+  predizione: PredictorDiagram,
 };
 
 export function Diagram({ id }: { id: DiagramId }) {

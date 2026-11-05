@@ -1133,3 +1133,34 @@ fieldset:disabled .option {
 .ctrl-units { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .ctrl-units li { padding: 0.3rem 0.55rem; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 999px; color: var(--text-muted); opacity: 0.55; }
 .ctrl-units li.is-used { opacity: 1; color: var(--text); border-color: var(--cyan); background: rgba(56, 216, 255, 0.1); }
+
+/* ───────── Diagrammi: pipeline e predizione dei salti ───────── */
+.pipe, .pred { display: grid; gap: 0.75rem; margin: 0 0 1rem; padding: 0.9rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: rgba(5, 12, 26, 0.5); min-width: 0; }
+.pipe-controls, .pred-controls { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; }
+.pipe-group, .pred-controls > div { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pipe .btn.is-current, .pred .btn.is-current { border-color: var(--cyan); color: var(--cyan-soft); background: rgba(56, 216, 255, 0.12); }
+.pipe-toggle { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; cursor: pointer; }
+.pipe-toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--cyan); }
+.pred-controls label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.9rem; color: var(--text-muted); }
+.pred-controls select { min-height: 40px; padding: 0.3rem 0.5rem; color: var(--text); background: #071022; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font: inherit; }
+.pipe-scroll { overflow-x: auto; min-width: 0; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: #071022; }
+.pipe-scroll:focus-visible { outline: 2px solid var(--cyan-soft); outline-offset: 2px; }
+.pipe-table, .pred-table { border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; width: max-content; min-width: 100%; }
+.pipe-table th, .pipe-table td, .pred-table th, .pred-table td { padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+.pipe-table thead th, .pred-table thead th { color: var(--text-muted); font-weight: 500; }
+.pipe-table tbody th { text-align: left; font-weight: 400; position: sticky; left: 0; background: #071022; }
+.pipe-table tbody th code { color: var(--text); }
+.pipe-st { color: #04101f; font-weight: 600; }
+.pipe-if { background: #7fe3ff; }
+.pipe-id { background: #5fc8ff; }
+.pipe-ex { background: #4aa8ff; }
+.pipe-mem { background: #7c9dff; }
+.pipe-wb { background: #a99cff; }
+.pipe-bubble th { color: #ffb4a8; font-style: italic; }
+.pipe-bubble td { background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255, 140, 120, 0.12) 6px 12px); }
+.pipe-summary { margin: 0; }
+.pipe-notes { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.25rem; line-height: 1.5; font-size: 0.92rem; }
+.pred-code { margin: 0; padding: 0.6rem 0.8rem; font-family: var(--font-mono); font-size: 0.85rem; background: #071022; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow-x: auto; }
+.pred-ok { color: #7ee2a8; }
+.pred-ko { color: #ffb4a8; font-weight: 600; }
+.pred-newrun td { border-top: 2px solid var(--line-strong); }

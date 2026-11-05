@@ -5,6 +5,7 @@ import { m03 } from './m03-isa';
 import { m04 } from './m04-riscv-rv32i';
 import { m05 } from './m05-location-counter';
 import { m06 } from './m06-processore';
+import { m07 } from './m07-pipeline';
 import type { ChoiceQuestion, Exercise, ModuleContent } from './types';
 
 /** Contenuti dei moduli già sviluppati. */
@@ -15,6 +16,7 @@ const CONTENT: Partial<Record<ModuleId, ModuleContent>> = {
   'riscv-rv32i': m04,
   'location-counter': m05,
   processore: m06,
+  pipeline: m07,
 };
 
 export const getModuleContent = (id: ModuleId): ModuleContent | undefined => CONTENT[id];
