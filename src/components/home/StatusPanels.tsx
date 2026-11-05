@@ -41,7 +41,7 @@ export function ProgressSummary({ completion, modulesDone, modulesTotal, xp, lev
           <dd>{level}</dd>
         </div>
       </dl>
-      {xp === 0 && <p className="hint-text">Il progresso cresce completando le sezioni Learn, Practice, Quiz e Challenge.</p>}
+      {xp === 0 && <p className="hint-text">Il progresso cresce con Learn, Practice e Quiz: superare il Quiz (60%) completa il modulo. La Challenge facoltativa dà XP extra.</p>}
     </Panel>
   );
 }

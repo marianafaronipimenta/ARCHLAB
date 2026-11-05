@@ -4,10 +4,13 @@ import {
   STORAGE_KEY,
   courseCompletion,
   createInitialProgress,
+  isModuleCompleted,
+  isModuleUnlocked,
   isSectionDone,
   levelInfo,
   loadProgress,
   moduleCompletion,
+  modulesCompleted,
   nextStep,
   recordAnswers,
   recordSection,
@@ -37,22 +40,43 @@ describe('progressi', () => {
   });
 
   it('quiz e challenge contano solo dal 60%; si conserva il miglior punteggio', () => {
-    let p = createInitialProgress();
-    p = recordSection(p, M, 'learn', T);
-    p = recordSection(p, M, 'practice', T);
-    p = recordSection(p, M, 'quiz', T, 0.5);
+    let p = recordSection(createInitialProgress(), M, 'quiz', T, 0.5);
     expect(isSectionDone(p, M, 'quiz')).toBe(false);
     p = recordSection(p, M, 'quiz', T + 1, 1);
     p = recordSection(p, M, 'quiz', T + 2, 0.75);
     expect(p.modules[M]!.sections.quiz).toEqual({ completedAt: T + 1, bestScore: 1, attempts: 3 });
-    p = recordSection(p, M, 'challenge', T, 0.5);
-    expect(moduleCompletion(p, M)).toBe(0.75);
-    expect(totalXp(p)).toBe(225);
-    expect([...unlockedAchievements(p)]).toEqual(['primo-passo', 'quiz-perfetto']);
-    expect(nextStep(p)).toMatchObject({ module: { id: M }, section: 'challenge' });
-    p = recordSection(p, M, 'challenge', T, 0.67);
+  });
+
+  it('il Quiz superato completa il modulo e sblocca il successivo, anche senza Practice né Challenge', () => {
+    const NEXT = 'assembly-object-executable' as const;
+    let p = recordSection(createInitialProgress(), M, 'learn', T);
+    expect(isModuleUnlocked(p, M)).toBe(true);
+    expect(isModuleUnlocked(p, NEXT)).toBe(false);
+    expect(moduleCompletion(p, M)).toBeCloseTo(1 / 3);
+    expect(nextStep(p)).toMatchObject({ module: { id: M }, section: 'practice' });
+
+    p = recordSection(p, M, 'quiz', T, 0.5); // sotto soglia: niente
+    expect(isModuleCompleted(p, M)).toBe(false);
+    expect(isModuleUnlocked(p, NEXT)).toBe(false);
+
+    p = recordSection(p, M, 'quiz', T, 0.625); // 5/8
+    expect(isModuleCompleted(p, M)).toBe(true);
     expect(moduleCompletion(p, M)).toBe(1);
-    expect(nextStep(p)).toMatchObject({ module: { id: 'assembly-object-executable' }, section: 'learn' });
+    expect(isModuleUnlocked(p, NEXT)).toBe(true);
+    expect(modulesCompleted(p)).toBe(1);
+    expect(nextStep(p)).toMatchObject({ module: { id: NEXT }, section: 'learn' });
+  });
+
+  it('la Challenge è facoltativa: dà XP e la conquista ma non cambia l’avanzamento', () => {
+    let p = recordSection(createInitialProgress(), M, 'challenge', T, 0.67);
+    expect(isModuleCompleted(p, M)).toBe(false);
+    expect(moduleCompletion(p, M)).toBe(0);
+    expect(nextStep(p)).toMatchObject({ module: { id: M }, section: 'learn' });
+    expect(totalXp(p)).toBe(150);
+    expect([...unlockedAchievements(p)]).toEqual(['prima-sfida']);
+    p = recordSection(p, M, 'quiz', T, 1);
+    expect(totalXp(p)).toBe(250);
+    expect([...unlockedAchievements(p)]).toEqual(['quiz-perfetto', 'prima-sfida']);
   });
 
   it('gli errori entrano quando sbagliati ed escono quando corretti', () => {

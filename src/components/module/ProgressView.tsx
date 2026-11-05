@@ -2,7 +2,7 @@ import { findItem } from '../../content/index';
 import type { ModuleContent } from '../../content/types';
 import { SECTION_IDS, SECTION_LABELS, type ModuleId } from '../../data/modules';
 import { moduleHref } from '../../router';
-import { PASS_SCORE, XP_PER_SECTION, isSectionDone, moduleCompletion, type StudentProgress } from '../../state/progress';
+import { PASS_SCORE, XP_PER_SECTION, isModuleCompleted, isOptionalSection, isSectionDone, moduleCompletion, type StudentProgress } from '../../state/progress';
 import { BoltIcon, CheckIcon } from '../art/Icons';
 import { Panel } from '../ui/Panel';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -25,6 +25,11 @@ export function ProgressView({ moduleId, content, progress }: Props) {
       <Panel className="result-card">
         <h2 className="result-title">Progresso del modulo</h2>
         <ProgressBar value={completion} label="Completamento del modulo" valueText={`${Math.round(completion * 100)}%`} />
+        <p className="muted">
+          {isModuleCompleted(progress, moduleId)
+            ? 'Modulo completato: il Quiz è superato e il modulo successivo è sbloccato.'
+            : `Il modulo si completa superando il Quiz con almeno il ${Math.round(PASS_SCORE * 100)}%. Learn e Practice sono consigliati; la Challenge è facoltativa.`}
+        </p>
         <ul className="section-status">
           {SECTION_IDS.map((s) => {
             const r = rec?.sections[s];
@@ -36,6 +41,7 @@ export function ProgressView({ moduleId, content, progress }: Props) {
                 </span>
                 <span className="section-status-name">
                   <a href={moduleHref(moduleId, s)}>{SECTION_LABELS[s]}</a>
+                  {isOptionalSection(s) && <span className="tab-opt">facoltativa</span>}
                 </span>
                 <span className="section-status-detail">
                   {done ? `Completata il ${fmtDate(r!.completedAt)}` : r ? `Soglia del ${Math.round(PASS_SCORE * 100)}% non ancora raggiunta` : 'Da fare'}

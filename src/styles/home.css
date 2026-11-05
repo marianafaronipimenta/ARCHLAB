@@ -429,3 +429,20 @@
     font-size: 1.15rem;
   }
 }
+
+/* ───────── Stato del modulo nella card ───────── */
+
+.module-state {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.module-state-done {
+  color: var(--green);
+  font-weight: 600;
+}
+.opt-mark {
+  color: var(--text-dim);
+}

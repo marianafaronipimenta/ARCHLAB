@@ -54,6 +54,6 @@ export interface Achievement {
 export const ACHIEVEMENTS: Achievement[] = [
   { id: 'primo-passo', title: 'Primo passo', description: 'Completa la sezione Learn di un modulo.' },
   { id: 'quiz-perfetto', title: 'Zero errori', description: 'Ottieni il 100% in un quiz.' },
-  { id: 'prima-sfida', title: 'Sfida superata', description: 'Supera la Challenge di un modulo.' },
-  { id: 'corso-completo', title: 'Architetto', description: 'Completa tutte le sezioni dei sette moduli.' },
+  { id: 'prima-sfida', title: 'Sfida superata', description: 'Supera una Challenge facoltativa.' },
+  { id: 'corso-completo', title: 'Architetto', description: 'Completa i sette moduli (Quiz superato in ognuno).' },
 ];

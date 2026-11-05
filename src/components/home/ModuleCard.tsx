@@ -1,7 +1,7 @@
-import { SECTION_IDS, SECTION_LABELS, type CourseModule } from '../../data/modules';
+import { MODULES, SECTION_IDS, SECTION_LABELS, type CourseModule } from '../../data/modules';
 import { ModuleArt } from '../art/ModuleArt';
 import { moduleHref } from '../../router';
-import { ArrowRightIcon, LockIcon } from '../art/Icons';
+import { ArrowRightIcon, CheckIcon, LockIcon } from '../art/Icons';
 import { Panel } from '../ui/Panel';
 import { ProgressBar } from '../ui/ProgressBar';
 
@@ -11,12 +11,17 @@ interface ModuleCardProps {
   completion: number;
   /** Modulo consigliato come prossimo passo. */
   recommended: boolean;
+  /** Sbloccato: il Quiz del modulo precedente è superato (o è il primo modulo). */
+  unlocked: boolean;
+  /** Completato: il Quiz di questo modulo è superato. */
+  completed: boolean;
 }
 
-export function ModuleCard({ module, completion, recommended }: ModuleCardProps) {
+export function ModuleCard({ module, completion, recommended, unlocked, completed }: ModuleCardProps) {
   const titleId = `mod-${module.id}`;
   const ready = module.availableSections.length > 0;
   const lessons = module.sources.map((s) => s.lesson).join(', ');
+  const prev = MODULES[MODULES.findIndex((m) => m.id === module.id) - 1];
   return (
     <Panel as="article" className="module-card" tone={recommended ? 'accent' : 'default'} aria-labelledby={titleId}>
       <div className="module-media">
@@ -35,6 +40,7 @@ export function ModuleCard({ module, completion, recommended }: ModuleCardProps)
         {[...SECTION_IDS, 'progress' as const].map((s) => (
           <li key={s} className={s !== 'progress' && module.availableSections.includes(s) ? 'is-ready' : undefined}>
             {SECTION_LABELS[s]}
+            {s === 'challenge' && <span className="opt-mark"> · opz.</span>}
           </li>
         ))}
       </ul>
@@ -45,17 +51,32 @@ export function ModuleCard({ module, completion, recommended }: ModuleCardProps)
         {module.sources.length > 1 ? 'Lezioni' : 'Lezione'} {lessons}
       </p>
 
-      {ready ? (
-        <a className="btn btn-module btn-primary" href={moduleHref(module.id)} aria-label={`Apri il modulo ${module.number}: ${module.title}`}>
-          {completion > 0 ? 'Continua' : 'Apri modulo'} <ArrowRightIcon size={16} />
-        </a>
-      ) : (
-        <button type="button" className="btn btn-module" disabled aria-describedby={`${titleId}-status`}>
+      {completed && (
+        <p className="module-state module-state-done">
+          <CheckIcon size={15} /> Completato
+        </p>
+      )}
+      {ready && !unlocked && prev && (
+        <p className="module-state" id={`${titleId}-status`}>
+          Si sblocca superando il Quiz del modulo {prev.number} (60%).
+        </p>
+      )}
+
+      {!ready ? (
+        <button type="button" className="btn btn-module" disabled aria-describedby={`${titleId}-building`}>
           <LockIcon size={15} /> In costruzione
         </button>
+      ) : !unlocked ? (
+        <button type="button" className="btn btn-module" disabled aria-describedby={`${titleId}-status`}>
+          <LockIcon size={15} /> Bloccato
+        </button>
+      ) : (
+        <a className={completed ? 'btn btn-module' : 'btn btn-module btn-primary'} href={moduleHref(module.id)} aria-label={`Apri il modulo ${module.number}: ${module.title}`}>
+          {completed ? 'Rivedi' : completion > 0 ? 'Continua' : 'Apri modulo'} <ArrowRightIcon size={16} />
+        </a>
       )}
       {!ready && (
-        <span id={`${titleId}-status`} className="sr-only">
+        <span id={`${titleId}-building`} className="sr-only">
           Le sezioni di questo modulo non sono ancora disponibili.
         </span>
       )}

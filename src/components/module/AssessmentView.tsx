@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { ChoiceQuestion, ModuleContent } from '../../content/types';
-import { moduleHref } from '../../router';
+import type { CourseModule } from '../../data/modules';
+import { homeHref, moduleHref } from '../../router';
 import { PASS_SCORE } from '../../state/progress';
 import { BoltIcon, CheckIcon } from '../art/Icons';
 import { ChoiceQuestionView } from '../exercise/ChoiceQuestionView';
@@ -13,6 +14,8 @@ interface Props {
   mode: 'quiz' | 'challenge';
   /** Miglior punteggio già ottenuto, se esiste. */
   best?: number;
+  /** Modulo successivo, per il collegamento dopo il superamento del Quiz. */
+  nextModule?: CourseModule;
   /** Chiamata alla fine con il punteggio e l’esito di ogni domanda. */
   onFinish: (score: number, results: { id: string; correct: boolean }[]) => void;
 }
@@ -24,11 +27,25 @@ interface Answer {
 }
 
 const COPY = {
-  quiz: { title: 'Quiz', xp: 100, start: 'Inizia il quiz', next: 'Domanda successiva', last: 'Vedi il risultato' },
-  challenge: { title: 'Challenge', xp: 150, start: 'Inizia la Challenge', next: 'Domanda successiva', last: 'Consegna la Challenge' },
+  quiz: {
+    title: 'Quiz',
+    xp: 100,
+    start: 'Inizia il quiz',
+    next: 'Domanda successiva',
+    last: 'Vedi il risultato',
+    rule: 'Superarlo completa il modulo e sblocca il successivo',
+  },
+  challenge: {
+    title: 'Challenge',
+    xp: 150,
+    start: 'Inizia la Challenge',
+    next: 'Domanda successiva',
+    last: 'Consegna la Challenge',
+    rule: 'Facoltativa: non blocca l’avanzamento',
+  },
 } as const;
 
-export function AssessmentView({ content, mode, best, onFinish }: Props) {
+export function AssessmentView({ content, mode, best, nextModule, onFinish }: Props) {
   const set = mode === 'quiz' ? content.quiz : content.challenge;
   const copy = COPY[mode];
   const [phase, setPhase] = useState<'intro' | 'run' | 'result'>('intro');
@@ -58,6 +75,7 @@ export function AssessmentView({ content, mode, best, onFinish }: Props) {
         <ul className="facts">
           <li>{set.questions.length} domande</li>
           <li>Soglia: {Math.round(PASS_SCORE * 100)}%</li>
+          <li className="fact-rule">{copy.rule}</li>
           <li>
             <BoltIcon size={15} /> +{copy.xp} XP al primo superamento
           </li>
@@ -116,12 +134,25 @@ export function AssessmentView({ content, mode, best, onFinish }: Props) {
         </h2>
         <ProgressBar value={score} label="Punteggio" valueText={`${right}/${questions.length} · ${Math.round(score * 100)}%`} />
         <p>
-          {passed
-            ? 'Le domande sbagliate restano nella scheda Progress finché non le risolvi.'
-            : `Serve almeno il ${Math.round(PASS_SCORE * 100)}%. Rileggi le spiegazioni qui sotto, ripassa le pagine indicate e riprova.`}
+          {mode === 'quiz' && passed && (
+            <>
+              <strong>Modulo completato.</strong>{' '}
+              {nextModule ? `Il modulo ${nextModule.number} «${nextModule.title}» è sbloccato. ` : 'Hai completato l’ultimo modulo. '}
+              La Challenge resta disponibile come prova facoltativa.{' '}
+            </>
+          )}
+          {mode === 'challenge' && passed && 'Ottimo: Challenge superata, +150 XP al primo superamento. '}
+          {!passed && mode === 'quiz' && `Serve almeno il ${Math.round(PASS_SCORE * 100)}% per completare il modulo. Rileggi le spiegazioni qui sotto, ripassa le pagine indicate e riprova. `}
+          {!passed && mode === 'challenge' && 'La Challenge è facoltativa: non blocca l’avanzamento. Puoi riprovarla quando vuoi. '}
+          {passed && 'Le domande sbagliate restano nella scheda Progress finché non le risolvi.'}
         </p>
         <div className="row-actions">
-          <button type="button" className="btn btn-primary" onClick={start}>
+          {mode === 'quiz' && passed && nextModule && (
+            <a className="btn btn-primary" href={nextModule.availableSections.length ? moduleHref(nextModule.id) : homeHref('moduli')}>
+              {nextModule.availableSections.length ? `Vai al modulo ${nextModule.number}` : 'Torna ai moduli'}
+            </a>
+          )}
+          <button type="button" className={mode === 'quiz' && passed && nextModule ? 'btn' : 'btn btn-primary'} onClick={start}>
             Riprova
           </button>
           <a className="btn" href={moduleHref(content.moduleId, 'progress')}>

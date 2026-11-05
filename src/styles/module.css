@@ -806,3 +806,34 @@ fieldset:disabled .option {
     flex: 1 1 100%;
   }
 }
+
+/* ───────── Avanzamento: sezioni facoltative e moduli bloccati ───────── */
+
+.tab-opt {
+  padding: 0 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid rgba(120, 140, 170, 0.35);
+  border-radius: 4px;
+}
+.section-status-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.5rem;
+}
+.section-status li {
+  grid-template-columns: 28px 170px minmax(0, 1fr) auto;
+}
+.fact-rule {
+  border-color: var(--line-strong) !important;
+  color: var(--cyan-soft);
+}
+@media (max-width: 700px) {
+  .section-status li {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+  }
+}

@@ -2,6 +2,8 @@ import { SIMULATORS } from '../data/catalog';
 import { MODULES } from '../data/modules';
 import {
   courseCompletion,
+  isModuleCompleted,
+  isModuleUnlocked,
   levelInfo,
   moduleCompletion,
   modulesCompleted,
@@ -31,11 +33,18 @@ export function HomeScreen({ progress }: { progress: StudentProgress }) {
           <h2 id="modules-title" className="section-title">
             Moduli
           </h2>
-          <p className="section-note">Sette moduli, nell’ordine delle lezioni. Ognuno avrà Learn, Practice, Quiz, Challenge e Progress.</p>
+          <p className="section-note">Sette moduli, nell’ordine delle lezioni. Superare il Quiz (60%) completa un modulo e sblocca il successivo; la Challenge è facoltativa.</p>
         </div>
         <div className="module-grid">
           {MODULES.map((m) => (
-            <ModuleCard key={m.id} module={m} completion={moduleCompletion(progress, m.id)} recommended={step?.module.id === m.id} />
+            <ModuleCard
+              key={m.id}
+              module={m}
+              completion={moduleCompletion(progress, m.id)}
+              recommended={step?.module.id === m.id}
+              unlocked={isModuleUnlocked(progress, m.id)}
+              completed={isModuleCompleted(progress, m.id)}
+            />
           ))}
         </div>
       </section>
