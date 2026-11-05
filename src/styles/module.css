@@ -1074,3 +1074,38 @@ fieldset:disabled .option {
 .memmap-region.is-current { background: rgba(56, 216, 255, 0.14); box-shadow: inset 3px 0 0 var(--cyan); }
 .memmap-region:focus-visible { outline: 2px solid var(--cyan-soft); outline-offset: -2px; }
 .memmap-text { margin: 0; line-height: 1.6; }
+
+/* ───────── Diagramma: Location Counter ───────── */
+.lcsim {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0 0 1rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(5, 12, 26, 0.5);
+  min-width: 0;
+}
+.lcsim-examples, .lcsim-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.lcsim-examples .btn.is-current { border-color: var(--cyan); color: var(--cyan-soft); }
+.lcsim-grid { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .lcsim-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } }
+.lcsim-source {
+  list-style: none; margin: 0; padding: 0.4rem 0; min-width: 0; overflow-x: auto;
+  background: #071022; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+}
+.lcsim-source li { display: grid; grid-template-columns: 6.6rem minmax(0, 1fr); gap: 0.5rem; padding: 0.15rem 0.6rem; font-family: var(--font-mono); font-size: 0.85rem; }
+.lcsim-source li code { white-space: pre; color: var(--text-muted); }
+.lcsim-source li.is-done code { color: var(--text); }
+.lcsim-source li.is-current { background: rgba(56, 216, 255, 0.14); box-shadow: inset 3px 0 0 var(--cyan); }
+.lcsim-source li.is-current code { color: var(--cyan-soft); }
+.lcsim-addr { color: var(--text-muted); font-size: 0.78rem; }
+.lcsim-side { display: grid; gap: 0.7rem; align-content: start; min-width: 0; }
+.lcsim-lc { margin: 0; display: flex; align-items: baseline; gap: 0.6rem; font-family: var(--font-mono); }
+.lcsim-lc span { color: var(--text-muted); font-size: 0.85rem; }
+.lcsim-lc strong { font-size: 1.35rem; color: var(--cyan-soft); }
+.lcsim-note { margin: 0; line-height: 1.55; font-size: 0.93rem; }
+.lcsim-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.85rem; }
+.lcsim-table caption { text-align: left; font-family: var(--font-sans, inherit); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 0.3rem; }
+.lcsim-table th, .lcsim-table td { text-align: left; padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line); }
+.lcsim-table th { color: var(--text-muted); font-weight: 500; }

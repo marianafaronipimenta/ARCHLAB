@@ -101,7 +101,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Location Counter', 'Symbol table', 'Direttive .skip, .align, .ascii, .asciz', 'Espansione delle pseudo-istruzioni'],
     icon: 'counter',
     sources: [{ lesson: 8, title: 'Location Counter' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'processore',

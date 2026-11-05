@@ -4,6 +4,7 @@ import { FetchDecodeDiagram } from './FetchDecodeDiagram';
 import { InterpreterDiagram } from './InterpreterDiagram';
 import { MemoryLayoutDiagram } from './MemoryLayoutDiagram';
 import { LevelsDiagram } from './LevelsDiagram';
+import { LocationCounterDiagram } from './LocationCounterDiagram';
 import { RpnDiagram } from './RpnDiagram';
 import { ToolchainDiagram } from './ToolchainDiagram';
 import { VirtualMachinesDiagram } from './VirtualMachinesDiagram';
@@ -17,6 +18,7 @@ const DIAGRAMS: Record<DiagramId, () => JSX.Element> = {
   rpn: RpnDiagram,
   endianness: EndianDiagram,
   'memory-layout': MemoryLayoutDiagram,
+  'location-counter': LocationCounterDiagram,
 };
 
 export function Diagram({ id }: { id: DiagramId }) {
