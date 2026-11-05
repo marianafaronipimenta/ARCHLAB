@@ -130,15 +130,35 @@ export function isSectionDone(p: StudentProgress, m: ModuleId, s: SectionId) {
   return s === 'quiz' || s === 'challenge' ? (rec.bestScore ?? 0) >= PASS_SCORE : true;
 }
 
-/** Frazione di sezioni completate in un modulo (0–1). */
-export const moduleCompletion = (p: StudentProgress, m: ModuleId) =>
-  SECTION_IDS.filter((s) => isSectionDone(p, m, s)).length / SECTION_IDS.length;
+/*
+ * Regole di avanzamento:
+ * - un modulo è COMPLETATO (e sblocca il successivo) quando il suo Quiz raggiunge almeno il 60%;
+ * - Learn e Practice sono consigliati e danno XP, ma non bloccano;
+ * - la Challenge è facoltativa: dà XP e una conquista, ma non conta per l’avanzamento.
+ */
 
-/** Frazione di sezioni completate in tutto il corso (0–1). */
+/** Sezioni che formano il percorso consigliato di un modulo (la Challenge resta fuori: è facoltativa). */
+export const REQUIRED_SECTIONS: SectionId[] = ['learn', 'practice', 'quiz'];
+export const isOptionalSection = (s: SectionId) => !REQUIRED_SECTIONS.includes(s);
+
+/** Il modulo è completato quando il Quiz è superato (≥ 60%). */
+export const isModuleCompleted = (p: StudentProgress, m: ModuleId) => isSectionDone(p, m, 'quiz');
+
+/** Il primo modulo è sempre aperto; gli altri si sbloccano completando il precedente. */
+export function isModuleUnlocked(p: StudentProgress, m: ModuleId) {
+  const i = MODULES.findIndex((x) => x.id === m);
+  return i <= 0 || isModuleCompleted(p, MODULES[i - 1].id);
+}
+
+/** Avanzamento di un modulo (0–1): 1 se completato, altrimenti la quota del percorso consigliato svolta. */
+export const moduleCompletion = (p: StudentProgress, m: ModuleId) =>
+  isModuleCompleted(p, m) ? 1 : REQUIRED_SECTIONS.filter((s) => isSectionDone(p, m, s)).length / REQUIRED_SECTIONS.length;
+
+/** Avanzamento dell’intero corso (0–1). */
 export const courseCompletion = (p: StudentProgress) =>
   MODULES.reduce((sum, m) => sum + moduleCompletion(p, m.id), 0) / MODULES.length;
 
-export const modulesCompleted = (p: StudentProgress) => MODULES.filter((m) => moduleCompletion(p, m.id) === 1).length;
+export const modulesCompleted = (p: StudentProgress) => MODULES.filter((m) => isModuleCompleted(p, m.id)).length;
 
 export function totalXp(p: StudentProgress) {
   let xp = 0;
@@ -162,11 +182,12 @@ export function unlockedAchievements(p: StudentProgress): Set<AchievementId> {
   return new Set(ACHIEVEMENTS.map((a) => a.id).filter((id) => out.has(id)));
 }
 
-/** Prossimo passo consigliato: prima sezione non completata, seguendo l’ordine dei moduli. */
+/**
+ * Prossimo passo consigliato: nel primo modulo non ancora completato, la prima sezione
+ * del percorso consigliato (Learn, Practice, Quiz) non svolta. La Challenge non viene mai imposta.
+ */
 export function nextStep(p: StudentProgress): { module: CourseModule; section: SectionId } | null {
-  for (const m of MODULES) {
-    const s = SECTION_IDS.find((sid) => !isSectionDone(p, m.id, sid));
-    if (s) return { module: m, section: s };
-  }
-  return null;
+  const m = MODULES.find((x) => !isModuleCompleted(p, x.id));
+  if (!m) return null;
+  return { module: m, section: REQUIRED_SECTIONS.find((s) => !isSectionDone(p, m.id, s)) ?? 'quiz' };
 }

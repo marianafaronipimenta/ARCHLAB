@@ -62,9 +62,11 @@ src/
 | --- | --- | --- | --- |
 | Learn | Pagine con testi, codice, riquadri, diagrammi interattivi, punti da ricordare e verifica rapida; riprende dall’ultima pagina aperta | «Completa Learn» sull’ultima pagina | 50 |
 | Practice | Un esercizio alla volta (scelta multipla, ordinamento, abbinamento), tentativi illimitati, feedback per ogni opzione, link alla pagina da ripassare | Tutti gli esercizi risolti | 75 |
-| Quiz | Una risposta per domanda, feedback e spiegazione immediati, resoconto finale | Almeno 60% (il 100% sblocca «Zero errori») | 100 |
-| Challenge | Domande nuove, nessun suggerimento, esito solo alla fine con resoconto | Almeno 60% | 150 |
+| Quiz | Una risposta per domanda, feedback e spiegazione immediati, resoconto finale | Almeno 60% (il 100% sblocca «Zero errori») · **completa il modulo e sblocca il successivo** | 100 |
+| Challenge (facoltativa) | Domande nuove, nessun suggerimento, esito solo alla fine con resoconto | Almeno 60% · **non incide sull’avanzamento** | 150 |
 | Progress | Stato delle sezioni, miglior punteggio, tentativi, errori da ripassare con spiegazione e link | — | — |
+
+**Avanzamento**: un modulo è completato quando il suo Quiz raggiunge almeno il 60%; il modulo 01 è sempre aperto e ogni modulo successivo si sblocca completando il precedente. Learn e Practice sono il percorso consigliato e contano nella percentuale del modulo, ma non bloccano. La Challenge è facoltativa: dà XP e la conquista «Sfida superata», ma non serve per avanzare.
 
 Gli errori al primo tentativo entrano in «Da ripassare» e ne escono quando la stessa domanda viene risolta correttamente.
 
