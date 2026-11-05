@@ -2,6 +2,7 @@ import type { DiagramId } from '../../content/types';
 import { EndianDiagram } from './EndianDiagram';
 import { FetchDecodeDiagram } from './FetchDecodeDiagram';
 import { InterpreterDiagram } from './InterpreterDiagram';
+import { MemoryLayoutDiagram } from './MemoryLayoutDiagram';
 import { LevelsDiagram } from './LevelsDiagram';
 import { RpnDiagram } from './RpnDiagram';
 import { ToolchainDiagram } from './ToolchainDiagram';
@@ -15,6 +16,7 @@ const DIAGRAMS: Record<DiagramId, () => JSX.Element> = {
   'ciclo-fde': FetchDecodeDiagram,
   rpn: RpnDiagram,
   endianness: EndianDiagram,
+  'memory-layout': MemoryLayoutDiagram,
 };
 
 export function Diagram({ id }: { id: DiagramId }) {

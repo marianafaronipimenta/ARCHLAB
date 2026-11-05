@@ -1036,3 +1036,41 @@ fieldset:disabled .option {
   font-size: 1.05rem;
   color: var(--cyan-soft);
 }
+
+/* ───────── Diagramma: memory layout ───────── */
+.memmap {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0 0 1rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(5, 12, 26, 0.5);
+}
+@media (min-width: 720px) {
+  .memmap { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); align-items: start; }
+}
+.memmap-col { display: grid; gap: 0.3rem; min-width: 0; }
+.memmap-addr { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+.memmap-list { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.memmap-region {
+  width: 100%;
+  min-height: 44px;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  color: var(--text);
+  background: #071022;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  font: inherit;
+}
+.memmap-list li:last-child .memmap-region { border-bottom: 0; }
+.memmap-region span { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); }
+.memmap-free { min-height: 70px; background: repeating-linear-gradient(135deg, #071022 0 8px, #0a1630 8px 16px); }
+.memmap-region.is-current { background: rgba(56, 216, 255, 0.14); box-shadow: inset 3px 0 0 var(--cyan); }
+.memmap-region:focus-visible { outline: 2px solid var(--cyan-soft); outline-offset: -2px; }
+.memmap-text { margin: 0; line-height: 1.6; }

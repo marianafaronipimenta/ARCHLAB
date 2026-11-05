@@ -91,7 +91,7 @@ export const MODULES: CourseModule[] = [
       { lesson: 7, title: 'Funzioni e procedure in RISC-V' },
       { lesson: 9, title: 'RISC-V (RV32IM)' },
     ],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'location-counter',
