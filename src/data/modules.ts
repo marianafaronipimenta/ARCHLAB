@@ -111,7 +111,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Fetch, decodifica, esecuzione, memoria, write-back', 'Data path', 'Segnali di controllo', 'Istruzioni R, load/store, branch', 'Clock e latenze'],
     icon: 'cpu',
     sources: [{ lesson: 10, title: 'Il processore' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'pipeline',

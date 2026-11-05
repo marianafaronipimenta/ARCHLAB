@@ -1109,3 +1109,27 @@ fieldset:disabled .option {
 .lcsim-table caption { text-align: left; font-family: var(--font-sans, inherit); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 0.3rem; }
 .lcsim-table th, .lcsim-table td { text-align: left; padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--line); }
 .lcsim-table th { color: var(--text-muted); font-weight: 500; }
+
+/* ───────── Diagramma: unità di controllo ───────── */
+.ctrl { display: grid; gap: 0.75rem; margin: 0 0 1rem; padding: 0.9rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: rgba(5, 12, 26, 0.5); min-width: 0; }
+.ctrl-pick { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ctrl-pick .btn { font-family: var(--font-mono); min-width: 3.4rem; }
+.ctrl .btn.is-current { border-color: var(--cyan); color: var(--cyan-soft); background: rgba(56, 216, 255, 0.12); }
+.ctrl-example { margin: 0; }
+.ctrl-example code { font-family: var(--font-mono); color: var(--cyan-soft); }
+.ctrl-grid { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .ctrl-grid { grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); } }
+.ctrl-table { border-collapse: collapse; font-family: var(--font-mono); font-size: 0.88rem; width: 100%; align-self: start; }
+.ctrl-table caption { text-align: left; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 0.3rem; }
+.ctrl-table th, .ctrl-table td { text-align: left; padding: 0.3rem 0.55rem; border-bottom: 1px solid var(--line); font-weight: 400; }
+.ctrl-table th { color: var(--text-muted); }
+.ctrl-table tr.is-on td { color: var(--cyan-soft); font-weight: 600; }
+.ctrl-side { display: grid; gap: 0.6rem; align-content: start; min-width: 0; }
+.ctrl-side p { margin: 0; line-height: 1.55; }
+.ctrl-side code { font-family: var(--font-mono); color: var(--cyan-soft); }
+.ctrl-zero { display: grid; gap: 0.4rem; padding: 0.6rem; border: 1px dashed var(--line-strong); border-radius: var(--radius-sm); }
+.ctrl-zero > span { font-size: 0.88rem; color: var(--text-muted); }
+.ctrl-zero div { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.ctrl-units { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ctrl-units li { padding: 0.3rem 0.55rem; font-size: 0.82rem; border: 1px solid var(--line); border-radius: 999px; color: var(--text-muted); opacity: 0.55; }
+.ctrl-units li.is-used { opacity: 1; color: var(--text); border-color: var(--cyan); background: rgba(56, 216, 255, 0.1); }

@@ -1,4 +1,5 @@
 import type { DiagramId } from '../../content/types';
+import { ControlUnitDiagram } from './ControlUnitDiagram';
 import { EndianDiagram } from './EndianDiagram';
 import { FetchDecodeDiagram } from './FetchDecodeDiagram';
 import { InterpreterDiagram } from './InterpreterDiagram';
@@ -19,6 +20,7 @@ const DIAGRAMS: Record<DiagramId, () => JSX.Element> = {
   endianness: EndianDiagram,
   'memory-layout': MemoryLayoutDiagram,
   'location-counter': LocationCounterDiagram,
+  controllo: ControlUnitDiagram,
 };
 
 export function Diagram({ id }: { id: DiagramId }) {
