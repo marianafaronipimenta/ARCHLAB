@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts'],
-    server: { port: 5174, strictPort: true },
-    preview: { port: 5174, strictPort: true },
   },
+  server: { port: 5174, strictPort: true },
+  preview: { port: 5174, strictPort: true },
 });
