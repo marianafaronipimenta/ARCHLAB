@@ -446,3 +446,5 @@
 .opt-mark {
   color: var(--text-dim);
 }
+.sim-preview { margin: 0.5rem 0 0; font-size: 0.88rem; }
+.sim-preview a { color: var(--cyan-soft); }

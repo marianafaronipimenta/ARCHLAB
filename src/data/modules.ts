@@ -65,7 +65,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Catena di traduzione', 'Compilatore, assemblatore, linker, loader', 'File .c, .s, .o ed eseguibili', 'Simboli esterni'],
     icon: 'files',
     sources: [{ lesson: 2, title: 'Assembly, object, and executable files' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'isa',
@@ -75,7 +75,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Livelli di privilegio', 'Stack, accumulatore, load-store', 'Notazione polacca inversa', 'Endianness e allineamento', 'Dipendenze RAW, WAR, WAW'],
     icon: 'isa',
     sources: [{ lesson: 3, title: 'Instruction Set Architecture (ISA)' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'riscv-rv32i',
@@ -91,7 +91,7 @@ export const MODULES: CourseModule[] = [
       { lesson: 7, title: 'Funzioni e procedure in RISC-V' },
       { lesson: 9, title: 'RISC-V (RV32IM)' },
     ],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'location-counter',
@@ -101,7 +101,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Location Counter', 'Symbol table', 'Direttive .skip, .align, .ascii, .asciz', 'Espansione delle pseudo-istruzioni'],
     icon: 'counter',
     sources: [{ lesson: 8, title: 'Location Counter' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'processore',
@@ -111,7 +111,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Fetch, decodifica, esecuzione, memoria, write-back', 'Data path', 'Segnali di controllo', 'Istruzioni R, load/store, branch', 'Clock e latenze'],
     icon: 'cpu',
     sources: [{ lesson: 10, title: 'Il processore' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'pipeline',
@@ -125,7 +125,7 @@ export const MODULES: CourseModule[] = [
       { lesson: 12, title: 'Pipeline: hazard sui dati' },
       { lesson: 13, title: 'Pipeline: hazard sul controllo' },
     ],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
 ];
 

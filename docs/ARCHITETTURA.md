@@ -18,7 +18,14 @@ Cartella Google Drive «architettura 2» (corso Architettura degli Elaboratori, 
 | 06 Il processore | 10. Il processore |
 | 07 Pipeline | 11. La pipeline · 12. Hazard sui dati · 13. Hazard sul controllo |
 
-C’è anche «Materiale utilizzabile all’esame.pdf», da usare più avanti per i riferimenti rapidi. I contenuti del modulo 01 seguono la lezione 1 (riferimenti «slide n» = posizione nella presentazione).
+C’è anche «Materiale utilizzabile all’esame.pdf», da usare più avanti per i riferimenti rapidi. I riferimenti «slide n» indicano la posizione nella presentazione.
+
+Note sulle fonti:
+
+- Lezione 4 (PDF): il testo estraibile si ferma alle istruzioni di store (SB/SH/SW). Il resto del modulo 04 viene dalle lezioni 5, 6, 7 e 9.
+- Lezione 3: le caratteristiche specifiche dell’x86 non sono materia d’esame e compaiono solo come confronto.
+- Lezioni 11 e 12 contano in modo diverso le bolle tra due istruzioni dipendenti senza propagazione (3 se ID legge prima che WB scriva, 2 se la scrittura avviene prima della lettura). Il modulo 07 spiega entrambe le convenzioni; il simulatore usa la seconda, quella della lezione 12.
+- Lezione 13: alcune tabelle del predittore a 2 bit nelle slide non sono coerenti tra «stato prima» e «stato dopo». Il simulatore usa il contatore a saturazione descritto nel testo (4 stati, un passo alla volta).
 
 ## Struttura
 
@@ -47,7 +54,7 @@ src/
 src/
   content/
     types.ts                  Schema: pagine Learn (blocchi, diagrammi, punti chiave, verifica), esercizi, quiz, challenge
-    m01-approccio-strutturale.ts
+    m01-approccio-strutturale.ts … m07-pipeline.ts
     index.ts                  Registro dei contenuti + validateContent()
   router.ts                   Routing via hash: #/, #/<sezione>, #/modulo/<id>/<scheda>[/<pagina>]
   state/store.tsx             ProgressProvider: completeSection, recordResults, rememberLearnPage
@@ -72,14 +79,29 @@ Gli errori al primo tentativo entrano in «Da ripassare» e ne escono quando la 
 
 **Aggiungere un modulo**: creare `src/content/mNN-….ts` con lo schema di `types.ts`, registrarlo in `content/index.ts` e aggiungere le sezioni pronte ad `availableSections` in `data/modules.ts`. `npm test` verifica ID, riferimenti, opzioni, feedback e che le domande della Challenge siano nuove.
 
+### Regola Practice / Quiz
+
+La Practice fa domande dirette («Che cos’è il Location Counter?»). Il Quiz non le ripete: chiede lo stesso concetto al contrario (dalla definizione al termine, dai valori dei segnali all’istruzione, dalla symbol table alla direttiva) oppure su un caso nuovo. `validateContent()` rifiuta un Quiz con una domanda identica a una della Practice.
+
+### Logica dei diagrammi interattivi (`src/sim/`)
+
+Logica pura, senza React, verificata dai test sugli esempi delle slide:
+
+| File | Usato in | Che cosa calcola |
+| --- | --- | --- |
+| `rpn.ts` | 03 ISA | Conversione in notazione polacca inversa, valutazione su stack, byte little/big-endian |
+| `lc.ts`, `lcExamples.ts` | 05 Location Counter | Avanzamento dell’LC riga per riga e symbol table (.byte/.half/.word, .ascii/.asciz, .skip, .align, .equ/.set, sezioni, pseudo-istruzioni) |
+| `control.ts` | 06 Il processore | Segnali dell’unità di controllo, controllore ALU, PCSrc = Branch AND Zero, unità usate |
+| `pipeline.ts`, `pipelineExamples.ts` | 07 Pipeline | Diagramma multi-ciclo con bolle, con o senza propagazione (load-use, lw → sw) |
+| `predictor.ts` | 07 Pipeline | Predittori a 1 e 2 bit su un ciclo eseguito una o più volte |
+
 ### Prossimi passi
 
-- Moduli 02–07 con lo stesso schema.
-- `src/sim/`: logica pura e testata dei simulatori (registri RV32I, esecuzione, data path, pipeline per cicli).
+- Simulatori autonomi (registri RV32I, esecuzione istruzione per istruzione) partendo da `src/sim/`. Le card della home rimandano intanto alle versioni base nelle pagine Learn dei moduli 06 e 07.
 
 ## Regole rispettate
 
-- **Niente funzionalità finte**: progressi, XP, livello e conquiste si calcolano solo da attività reali; i moduli non ancora sviluppati restano «In costruzione» e i simulatori «In sviluppo».
+- **Niente funzionalità finte**: progressi, XP, livello e conquiste si calcolano solo da attività reali; i simulatori autonomi restano «In sviluppo» (con link alle versioni base già presenti nelle pagine Learn).
 - **Studio prolungato**: testo principale non ciano, contrasti alti, nessuna animazione invadente; la modalità studio e `prefers-reduced-motion` spengono bagliori e animazioni.
 - **Accessibilità**: link «Vai al contenuto», focus visibile, barre di avanzamento con `role="progressbar"`, dialog nativo con Esc, illustrazioni decorative nascoste ai lettori di schermo.
 - **Responsività**: verificata a 1920, 1280 e 375 px senza scorrimento orizzontale; sotto i 900 px la sidebar diventa una barra orizzontale.
