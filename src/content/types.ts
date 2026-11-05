@@ -7,7 +7,7 @@ import type { ModuleId } from '../data/modules';
 
 /* ───────────── Learn ───────────── */
 
-export type DiagramId = 'livelli' | 'interprete-traduttore' | 'macchine-virtuali' | 'catena-traduzione' | 'ciclo-fde';
+export type DiagramId = 'livelli' | 'interprete-traduttore' | 'macchine-virtuali' | 'catena-traduzione' | 'ciclo-fde' | 'rpn' | 'endianness';
 
 export type LearnBlock =
   | { type: 'p'; text: string }

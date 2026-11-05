@@ -75,7 +75,7 @@ export const MODULES: CourseModule[] = [
     topics: ['Livelli di privilegio', 'Stack, accumulatore, load-store', 'Notazione polacca inversa', 'Endianness e allineamento', 'Dipendenze RAW, WAR, WAW'],
     icon: 'isa',
     sources: [{ lesson: 3, title: 'Instruction Set Architecture (ISA)' }],
-    availableSections: [],
+    availableSections: ['learn', 'practice', 'quiz', 'challenge'],
   },
   {
     id: 'riscv-rv32i',

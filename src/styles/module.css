@@ -928,3 +928,111 @@ fieldset:disabled .option {
 .fde-text {
   max-width: 65ch;
 }
+
+/* ───────── Diagrammi: notazione polacca inversa ed endianness ───────── */
+
+.rpn,
+.endian {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(5, 12, 26, 0.5);
+}
+.rpn-input {
+  display: grid;
+  gap: 0.35rem;
+}
+.rpn-input label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.rpn-input input {
+  min-height: 44px;
+  padding: 0.4rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text);
+  background: #071022;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  max-width: 100%;
+}
+.rpn-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.rpn-examples .btn {
+  font-family: var(--font-mono);
+}
+.rpn-postfix {
+  font-family: var(--font-mono);
+  color: var(--cyan-soft);
+}
+.rpn-error {
+  color: #ff9db0;
+}
+.rpn-eval {
+  display: grid;
+  gap: 0.6rem;
+}
+.rpn-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-height: 40px;
+}
+.rpn-cell {
+  min-width: 70px;
+  padding: 0.25rem 0.7rem;
+  font-family: var(--font-mono);
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(14, 28, 55, 0.9);
+}
+.rpn-cell.is-top {
+  border-color: var(--cyan);
+  box-shadow: var(--glow);
+}
+.endian-field {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+}
+.endian-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.endian-bytes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.endian-bytes li {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 80px;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(14, 28, 55, 0.9);
+}
+.endian-addr {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.endian-byte {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--cyan-soft);
+}
